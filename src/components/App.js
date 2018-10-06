@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import Overview from './Overview';
 
 const GlobalStyle = createGlobalStyle`
 html {
@@ -27,13 +28,17 @@ export default class App extends Component {
   };
 
   render() {
+    const { currency } = this.state;
     return (
       <div>
         <GlobalStyle />
         <Router>
           <Switch>
             <Route exact path="/" component={() => <div>Watchlist</div>} />
-            <Route path="/coins/:symbol/overview" component={() => <div>Coin Overview</div>} />
+            <Route
+              path="/coins/:symbol/overview"
+              component={props => <Overview currency={currency} {...props} />}
+            />
           </Switch>
         </Router>
       </div>

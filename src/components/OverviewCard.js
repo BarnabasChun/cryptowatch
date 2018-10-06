@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
+import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
 import { getSecondWord } from '../helpers';
 
@@ -90,12 +91,11 @@ CoinInfo.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const OverviewCard = ({ details, classes, updateWatchList, watchlist }) => {
+const OverviewCard = ({ details, classes, className, updateWatchList, watchlist }) => {
   if (Object.keys(details).length) {
     const alreadyFollowing = !!watchlist.find(coin => coin.FROMSYMBOL === details.FROMSYMBOL);
-
     return (
-      <div className={classes.container}>
+      <div className={classNames(classes.container, className)}>
         <CoinInfo classes={classes} details={details} />
         <FollowButton
           updateWatchList={updateWatchList}
@@ -114,6 +114,7 @@ OverviewCard.propTypes = {
   classes: PropTypes.object.isRequired,
   updateWatchList: PropTypes.func.isRequired,
   watchlist: PropTypes.array.isRequired,
+  className: PropTypes.string.isRequired,
 };
 
 const OverviewCardWithStyles = withStyles(styles)(OverviewCard);

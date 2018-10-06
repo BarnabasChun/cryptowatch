@@ -4,7 +4,7 @@ import OverviewCard from './OverviewCard';
 
 const Overview = ({ currency, ...props }) => (
   <Wrapper>
-    <OverviewCard currency={currency} {...props} />
+      <OverviewCard currency={currency} {...props} className="overview-card" />
   </Wrapper>
 );
 

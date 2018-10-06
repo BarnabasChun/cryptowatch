@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+import 'typeface-roboto';
 
 const renderApp = Component => render(<Component />, document.getElementById('root'));
 

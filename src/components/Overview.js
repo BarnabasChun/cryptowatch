@@ -1,5 +1,6 @@
 import React from 'react';
+import { Wrapper } from './utils';
 
-const Overview = () => <div>Overview</div>;
+const Overview = () => <Wrapper>Overview</Wrapper>;
 
 export default Overview;

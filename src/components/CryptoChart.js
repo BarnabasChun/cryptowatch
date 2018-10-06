@@ -64,12 +64,20 @@ export default class CryptoChart extends Component {
   };
 
   componentDidMount() {
-    const { symbol } = this.props.match.params;
+    const {
+      match: {
+        params: { symbol },
+      },
+    } = this.props;
     this.getHistoricalData(symbol);
   }
 
   componentDidUpdate(prevProps) {
-    const { symbol } = this.props.match.params;
+    const {
+      match: {
+        params: { symbol },
+      },
+    } = this.props;
     if (prevProps.match.params.symbol !== symbol) {
       this.getHistoricalData(symbol);
     }

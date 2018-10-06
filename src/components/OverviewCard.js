@@ -129,7 +129,11 @@ export default class OverviewCardContainer extends Component {
   };
 
   componentDidMount() {
-    const { symbol } = this.props.match.params;
+    const {
+      match: {
+        params: { symbol },
+      },
+    } = this.props;
     this.getCoinInfo(symbol);
     this.interval = setInterval(() => {
       this.getCoinInfo(symbol);
@@ -137,7 +141,11 @@ export default class OverviewCardContainer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { symbol } = this.props.match.params;
+    const {
+      match: {
+        params: { symbol },
+      },
+    } = this.props;
     if (prevProps.match.params.symbol !== symbol) {
       this.getCoinInfo(symbol);
     }

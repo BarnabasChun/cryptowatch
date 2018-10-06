@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 
@@ -21,16 +21,22 @@ html {
   ul, li { list-style: none; }
 `;
 
-const App = () => (
-  <div>
-    <GlobalStyle />
-    <Router>
-      <Switch>
-        <Route exact path="/" component={() => <div>Watchlist</div>} />
-        <Route path="/coins/:symbol/overview" component={() => <div>Coin Overview</div>} />
-      </Switch>
-    </Router>
-  </div>
-);
+export default class App extends Component {
+  state = {
+    currency: 'CAD',
+  };
 
-export default App;
+  render() {
+    return (
+      <div>
+        <GlobalStyle />
+        <Router>
+          <Switch>
+            <Route exact path="/" component={() => <div>Watchlist</div>} />
+            <Route path="/coins/:symbol/overview" component={() => <div>Coin Overview</div>} />
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
+}

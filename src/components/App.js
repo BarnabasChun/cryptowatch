@@ -25,10 +25,28 @@ html {
 export default class App extends Component {
   state = {
     currency: 'CAD',
+    watchlist: [],
+  };
+
+  updateWatchList = (updateType, coin) => {
+    if (updateType === 'ADD') {
+      this.setState(({ watchlist }) => ({
+        watchlist: [...watchlist, coin],
+      }));
+    } else {
+      const { watchlist } = this.state;
+      const indexToRemove = watchlist.findIndex(x => x.FROMSYMBOL === coin.FROMSYMBOL);
+
+      const updatedWatchList = watchlist.filter((x, i) => i !== indexToRemove);
+
+      this.setState({
+        watchlist: updatedWatchList,
+      });
+    }
   };
 
   render() {
-    const { currency } = this.state;
+    const { currency, watchlist } = this.state;
     return (
       <div>
         <GlobalStyle />
@@ -37,7 +55,14 @@ export default class App extends Component {
             <Route exact path="/" component={() => <div>Watchlist</div>} />
             <Route
               path="/coins/:symbol/overview"
-              component={props => <Overview currency={currency} {...props} />}
+              component={props => (
+                <Overview
+                  currency={currency}
+                  updateWatchList={this.updateWatchList}
+                  watchlist={watchlist}
+                  {...props}
+                />
+              )}
             />
           </Switch>
         </Router>

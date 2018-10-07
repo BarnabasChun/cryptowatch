@@ -46,7 +46,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
 
 const CoinInfo = ({ classes, details }) => {
   const { name, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
-  const changeColour = getChangeColour(CHANGEDAY);
+  const changeColour = getChangeColour(CHANGEPCTDAY);
   return (
     <div>
       <Typography component="h2" variant="title" gutterBottom>

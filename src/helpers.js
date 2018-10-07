@@ -30,10 +30,13 @@ export const formatMoney = n => {
 };
 
 export const getChangeColour = n => {
+  if (isNaN(n)) return 'black';
+  const normalizedN = parseFloat(n);
+
   let changeColour;
-  if (n === 0) {
+  if (normalizedN === 0) {
     changeColour = 'black';
-  } else if (n > 0) {
+  } else if (normalizedN > 0) {
     changeColour = 'green';
   } else {
     changeColour = 'red';

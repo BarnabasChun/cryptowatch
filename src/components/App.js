@@ -35,10 +35,10 @@ export default class App extends Component {
 
     // remove from list if already present
     if (indexToRemove !== -1) {
-      const updateWatchList = this.state.watchlist.filter((x, i) => i !== indexToRemove);
+      const updatedWatchList = this.state.watchlist.filter((x, i) => i !== indexToRemove);
 
       this.setState({
-        watchlist: updateWatchList,
+        watchlist: updatedWatchList,
       });
     } else {
       this.setState(({ watchlist }) => ({

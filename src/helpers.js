@@ -27,3 +27,15 @@ export const formatMoney = n => {
   if (n < 1000000000000) return `${(n / 1000000000).toFixed(2)}B`;
   return '1T+';
 };
+
+export const getChangeColour = n => {
+  let changeColour;
+  if (n === 0) {
+    changeColour = 'black';
+  } else if (n > 0) {
+    changeColour = 'green';
+  } else {
+    changeColour = 'red';
+  }
+  return changeColour;
+};

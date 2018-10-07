@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
 import { Wrapper } from './utils';
+import { getChangeColour } from '../helpers';
 
 const styles = theme => ({
   root: {
@@ -39,14 +40,8 @@ const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
     {headers.map((header, j) => {
       const cellData = data[header.prop];
 
-      let numberColour = 'black';
-      if (header.numeric && header.prop.toLowerCase().includes('change')) {
-        if (cellData > 0) {
-          numberColour = 'green';
-        } else {
-          numberColour = 'red';
-        }
-      }
+      const colour =
+        header.numeric && header.prop.toLowerCase().includes('change') && getChangeColour(cellData);
 
       return j === 0 ? (
         <TableCell
@@ -62,7 +57,7 @@ const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
           key={`${data.FROMSYMBOL}-${header.name}`}
           numeric={header.numeric}
           style={{
-            color: numberColour,
+            color: colour,
           }}
         >
           {cellData}

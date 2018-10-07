@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
-import { getNestedValues, toFixedAfterZero, formatMoney } from '../helpers';
+import { getNestedValues, toFixedAfterZero, formatMoney, getChangeColour } from '../helpers';
 
 const styles = theme => ({
   leftIcon: {
@@ -46,12 +46,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
 
 const CoinInfo = ({ classes, details }) => {
   const { name, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
-  let changeColour = 'black';
-  if (CHANGEDAY > 0) {
-    changeColour = 'green';
-  } else {
-    changeColour = 'red';
-  }
+  const changeColour = getChangeColour(CHANGEDAY);
   return (
     <div>
       <Typography component="h2" variant="title" gutterBottom>
@@ -138,9 +133,10 @@ export default class OverviewCardContainer extends Component {
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
     ).reduce((o, [key, value]) => {
       if (typeof value === 'number' && key !== 'LASTUPDATE') {
+        const changeSymbol = key.toLowerCase().includes('change') && value > 0 ? '+' : '';
         return {
           ...o,
-          [key]: formatMoney(toFixedAfterZero(value)),
+          [key]: `${changeSymbol}${formatMoney(toFixedAfterZero(value))}`,
         };
       }
       return {

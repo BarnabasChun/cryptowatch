@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import Overview from './Overview';
 
 const GlobalStyle = createGlobalStyle`
-html {
-  font-size: 62.5%;
+  html {
     box-sizing: border-box;
   }
 
@@ -21,16 +21,51 @@ html {
   ul, li { list-style: none; }
 `;
 
-const App = () => (
-  <div>
-    <GlobalStyle />
-    <Router>
-      <Switch>
-        <Route exact path="/" component={() => <div>Watchlist</div>} />
-        <Route path="/coins/:symbol/overview" component={() => <div>Coin Overview</div>} />
-      </Switch>
-    </Router>
-  </div>
-);
+export default class App extends Component {
+  state = {
+    currency: 'CAD',
+    watchlist: [],
+  };
 
-export default App;
+  updateWatchList = (updateType, coinDetails) => {
+    if (updateType === 'ADD') {
+      this.setState(({ watchlist }) => ({
+        watchlist: [...watchlist, coinDetails],
+      }));
+    } else {
+      const { watchlist } = this.state;
+      const indexToRemove = watchlist.findIndex(x => x.FROMSYMBOL === coinDetails.FROMSYMBOL);
+
+      const updatedWatchList = watchlist.filter((x, i) => i !== indexToRemove);
+
+      this.setState({
+        watchlist: updatedWatchList,
+      });
+    }
+  };
+
+  render() {
+    const { currency, watchlist } = this.state;
+    return (
+      <div>
+        <GlobalStyle />
+        <Router>
+          <Switch>
+            <Route exact path="/" component={() => <div>Watchlist</div>} />
+            <Route
+              path="/coins/:symbol/overview"
+              render={props => (
+                <Overview
+                  currency={currency}
+                  updateWatchList={this.updateWatchList}
+                  watchlist={watchlist}
+                  {...props}
+                />
+              )}
+            />
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
+}

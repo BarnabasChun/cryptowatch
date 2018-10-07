@@ -34,7 +34,7 @@ const StyledLink = styled(Link)`
   font-weight: 600;
 `;
 
-const DataTableRow = ({ data, headers, updateWatchList }) => (
+const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
   <TableRow>
     {headers.map((header, j) => {
       const cellData = data[header.prop];
@@ -55,7 +55,7 @@ const DataTableRow = ({ data, headers, updateWatchList }) => (
           scope="row"
           numeric={header.numeric}
         >
-          <StyledLink to={`/coins/${data.FROMSYMBOL}/overview`}>{cellData}</StyledLink>
+          <StyledLink to={`${url}/${data.FROMSYMBOL}/overview`}>{cellData}</StyledLink>
         </TableCell>
       ) : (
         <TableCell
@@ -75,7 +75,7 @@ const DataTableRow = ({ data, headers, updateWatchList }) => (
   </TableRow>
 );
 
-const DataTable = ({ data, headers, updateWatchList }) => (
+const DataTable = ({ data, headers, updateWatchList, ...props }) => (
   <Paper>
     <Table>
       <TableHead>
@@ -95,6 +95,7 @@ const DataTable = ({ data, headers, updateWatchList }) => (
             key={dataPoint.FROMSYMBOL}
             data={dataPoint}
             headers={headers}
+            {...props}
           />
         ))}
       </TableBody>
@@ -108,7 +109,7 @@ const StyledWatchList = styled.div`
   padding: 60px 0;
 `;
 
-const Watchlist = ({ watchlist, updateWatchList }) => (
+const Watchlist = ({ watchlist, updateWatchList, ...props }) => (
   <StyledWatchList>
     <Wrapper>
       {watchlist.length ? (
@@ -152,6 +153,7 @@ const Watchlist = ({ watchlist, updateWatchList }) => (
               prop: 'TOTALVOLUME24HTO',
             },
           ]}
+          {...props}
         />
       ) : (
         <Typography variant="display1">

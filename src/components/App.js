@@ -27,14 +27,14 @@ export default class App extends Component {
     watchlist: [],
   };
 
-  updateWatchList = (updateType, coin) => {
+  updateWatchList = (updateType, coinDetails) => {
     if (updateType === 'ADD') {
       this.setState(({ watchlist }) => ({
-        watchlist: [...watchlist, coin],
+        watchlist: [...watchlist, coinDetails],
       }));
     } else {
       const { watchlist } = this.state;
-      const indexToRemove = watchlist.findIndex(x => x.FROMSYMBOL === coin.FROMSYMBOL);
+      const indexToRemove = watchlist.findIndex(x => x.FROMSYMBOL === coinDetails.FROMSYMBOL);
 
       const updatedWatchList = watchlist.filter((x, i) => i !== indexToRemove);
 

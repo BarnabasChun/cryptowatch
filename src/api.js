@@ -31,9 +31,9 @@ export const getTradeHistory = async (symbol, currency, range) => {
 
   let totalCalendarUnits;
   // only for 1D, 5D, 1M, 6M, 1Y, 5Y (i.e. excludes YTD, MAX)
-  const [unit, calendarUnit] = normalizedRange.split('');
+  const [unitAmount, calendarUnit] = normalizedRange.split('');
 
-  const calendarUnitAmount = parseFloat(unit);
+  const calendarUnitAmount = parseFloat(unitAmount);
 
   // only day ranges (i.e. 1D or 5D) use the histo[minute] endpoint, all others use histo[day]
   const lookupUnit = range.charAt(1) === 'D' ? 'minute' : 'day';

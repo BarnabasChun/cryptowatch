@@ -26,7 +26,7 @@ export const rangeOptions = [
   { value: 'Max', aggregate: 7 },
 ];
 
-export const getTradeHistory = async (symbol, currency = 'USD', range) => {
+export const getTradeHistory = async (symbol, currency, range) => {
   const normalizedRange = range.toUpperCase();
 
   let totalCalendarUnits;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -6,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
-import { getSecondWord, getNestedValues } from '../helpers';
+import { getNestedValues, displayNumbersAfterDecimal } from '../helpers';
 
 const styles = theme => ({
   leftIcon: {
@@ -45,9 +46,8 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
 
 const CoinInfo = ({ classes, details }) => {
   const { name, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
-  const priceChange = getSecondWord(CHANGEDAY);
   let changeColour = 'black';
-  if (priceChange > 0) {
+  if (CHANGEDAY > 0) {
     changeColour = 'green';
   } else {
     changeColour = 'red';
@@ -59,7 +59,7 @@ const CoinInfo = ({ classes, details }) => {
       </Typography>
       <div className={classes.priceInfo}>
         <Typography component="h2" variant="headline">
-          {getSecondWord(PRICE)}
+          {PRICE}
         </Typography>
         <Typography
           component="h2"
@@ -68,11 +68,13 @@ const CoinInfo = ({ classes, details }) => {
             color: changeColour,
           }}
         >
-          {priceChange} ({CHANGEPCTDAY}
+          {CHANGEDAY} ({CHANGEPCTDAY}
           %)
         </Typography>
       </div>
-      <Typography variant="subheading">Last updated: {LASTUPDATE}</Typography>
+      <Typography variant="subheading">
+        Last updated: {moment(LASTUPDATE * 1000).fromNow()}
+      </Typography>
     </div>
   );
 };
@@ -132,7 +134,20 @@ export default class OverviewCardContainer extends Component {
   getCoinInfo = async symbol => {
     const { currency } = this.props;
 
-    const updatedCoinInfo = getNestedValues((await getTradeInfo(symbol, currency)).DISPLAY);
+    const updatedCoinInfo = Object.entries(
+      getNestedValues((await getTradeInfo(symbol, currency)).RAW)
+    ).reduce((o, [key, value]) => {
+      if (typeof value === 'number' && !Number.isInteger(value)) {
+        return {
+          ...o,
+          [key]: displayNumbersAfterDecimal(value),
+        };
+      }
+      return {
+        ...o,
+        [key]: value,
+      };
+    }, {});
 
     if (this.state.coinInfo.name) {
       // over-writes every property other than name

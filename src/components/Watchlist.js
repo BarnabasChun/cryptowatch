@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
 import { Wrapper } from './utils';
-import { getSecondWord } from '../helpers';
 
 const styles = theme => ({
   root: {
@@ -38,10 +37,7 @@ const StyledLink = styled(Link)`
 const DataTableRow = ({ data, headers, updateWatchList }) => (
   <TableRow>
     {headers.map((header, j) => {
-      const cellData =
-        header.numeric && data[header.prop].split(' ').length > 1
-          ? getSecondWord(data[header.prop])
-          : data[header.prop];
+      const cellData = data[header.prop];
 
       let numberColour = 'black';
       if (header.numeric && header.prop.toLowerCase().includes('change')) {

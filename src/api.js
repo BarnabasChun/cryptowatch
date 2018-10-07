@@ -36,7 +36,7 @@ export const getTradeHistory = async (symbol, currency, range) => {
   const calendarUnitAmount = parseFloat(unitAmount);
 
   // only day ranges (i.e. 1D or 5D) use the histo[minute] endpoint, all others use histo[day]
-  const lookupUnit = range.charAt(1) === 'D' ? 'minute' : 'day';
+  const lookupUnit = calendarUnit === 'D' ? 'minute' : 'day';
 
   const { aggregate } = rangeOptions.find(option => option.value === range);
 

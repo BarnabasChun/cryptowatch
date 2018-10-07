@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import Overview from './Overview';
 import Watchlist from './Watchlist';
+import Coins from './Coins';
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -66,9 +66,9 @@ export default class App extends Component {
               )}
             />
             <Route
-              path="/coins/:symbol/overview"
+              path="/coins"
               render={props => (
-                <Overview
+                <Coins
                   currency={currency}
                   updateWatchList={this.updateWatchList}
                   watchlist={watchlist}

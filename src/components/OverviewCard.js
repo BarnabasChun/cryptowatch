@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
-import { getNestedValues, displayNumbersAfterDecimal } from '../helpers';
+import { getNestedValues, displayNumbersAfterDecimal, formatMoney } from '../helpers';
 
 const styles = theme => ({
   leftIcon: {
@@ -140,7 +140,7 @@ export default class OverviewCardContainer extends Component {
       if (typeof value === 'number') {
         return {
           ...o,
-          [key]: displayNumbersAfterDecimal(value),
+          [key]: formatMoney(displayNumbersAfterDecimal(value)),
         };
       }
       return {

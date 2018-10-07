@@ -18,3 +18,12 @@ export const getNestedValues = o => {
 
   return o;
 };
+
+export const formatMoney = n => {
+  if (isNaN(n) || n <= 9999) return parseFloat(n.toFixed(2));
+  if (n < 1000000) return `${(n / 1000).toFixed(2)}K`;
+  if (n < 10000000) return `${(n / 1000000).toFixed(2)}M`;
+  if (n < 1000000000) return `${(n / 1000000).toFixed(2)}M`;
+  if (n < 1000000000000) return `${(n / 1000000000).toFixed(2)}B`;
+  return '1T+';
+};

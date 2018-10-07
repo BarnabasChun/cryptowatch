@@ -61,20 +61,22 @@ export default class App extends Component {
     ],
   };
 
-  updateWatchList = (updateType, coinDetails) => {
-    if (updateType === 'ADD') {
-      this.setState(({ watchlist }) => ({
-        watchlist: [...watchlist, coinDetails],
-      }));
-    } else {
-      const { watchlist } = this.state;
-      const indexToRemove = watchlist.findIndex(x => x.FROMSYMBOL === coinDetails.FROMSYMBOL);
+  updateWatchList = coinDetails => {
+    const indexToRemove = this.state.watchlist.findIndex(
+      x => x.FROMSYMBOL === coinDetails.FROMSYMBOL
+    );
 
-      const updateWatchList = watchlist.filter((x, i) => i !== indexToRemove);
+    // remove from list if already present
+    if (indexToRemove !== -1) {
+      const updateWatchList = this.state.watchlist.filter((x, i) => i !== indexToRemove);
 
       this.setState({
         watchlist: updateWatchList,
       });
+    } else {
+      this.setState(({ watchlist }) => ({
+        watchlist: [...watchlist, coinDetails],
+      }));
     }
   };
 

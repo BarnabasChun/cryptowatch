@@ -70,7 +70,7 @@ const DataTableRow = ({ data, headers, updateWatchList }) => (
       );
     })}
     <TableCell>
-      <StyledDeleteIcon onClick={() => updateWatchList('REMOVE', data)} />
+      <StyledDeleteIcon onClick={() => updateWatchList(data)} />
     </TableCell>
   </TableRow>
 );

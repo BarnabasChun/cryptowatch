@@ -137,7 +137,7 @@ export default class OverviewCardContainer extends Component {
     const updatedCoinInfo = Object.entries(
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
     ).reduce((o, [key, value]) => {
-      if (typeof value === 'number') {
+      if (typeof value === 'number' && key !== 'LASTUPDATE') {
         return {
           ...o,
           [key]: formatMoney(toFixedAfterZero(value)),

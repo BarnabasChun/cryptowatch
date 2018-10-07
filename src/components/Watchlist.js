@@ -136,6 +136,21 @@ const Watchlist = ({ watchlist, updateWatchList }) => (
               numeric: true,
               prop: 'CHANGEPCTDAY',
             },
+            {
+              name: 'Market Cap',
+              numeric: true,
+              prop: 'MKTCAP',
+            },
+            {
+              name: 'Circulating Supply',
+              numeric: true,
+              prop: 'SUPPLY',
+            },
+            {
+              name: 'Total Volume All Currencies (24Hr)',
+              numeric: true,
+              prop: 'TOTALVOLUME24HTO',
+            },
           ]}
         />
       ) : (

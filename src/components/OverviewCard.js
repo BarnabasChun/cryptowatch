@@ -122,6 +122,8 @@ const OverviewCardWithStyles = withStyles(styles)(OverviewCard);
 export default class OverviewCardContainer extends Component {
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
+    updateWatchList: PropTypes.func.isRequired,
+    watchlist: PropTypes.array.isRequired,
   };
 
   state = {
@@ -182,13 +184,13 @@ export default class OverviewCardContainer extends Component {
 
   render() {
     const { coinInfo } = this.state;
-    const { watchlist, updateWatchList, ...reset } = this.props;
+    const { watchlist, updateWatchList, ...rest } = this.props;
     return (
       <OverviewCardWithStyles
         details={coinInfo}
         watchlist={watchlist}
         updateWatchList={updateWatchList}
-        {...reset}
+        {...rest}
       />
     );
   }

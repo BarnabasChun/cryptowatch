@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactRouterPropTypes from 'react-router-prop-types';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import Button from '@material-ui/core/Button';
@@ -54,10 +53,6 @@ const OptionButton = ({ isActive, option, updateSelected, ...props }) => (
 );
 
 export default class CryptoChart extends Component {
-  static propTypes = {
-    match: ReactRouterPropTypes.match.isRequired,
-  };
-
   state = {
     range: '1D',
     historicalData: [],

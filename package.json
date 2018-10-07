@@ -10,12 +10,10 @@
     "highcharts": "^6.1.4",
     "highcharts-react-official": "^1.4.0",
     "moment": "^2.22.2",
-    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-router-prop-types": "^1.0.4",
     "react-scripts": "2.0.4",
     "styled-components": "^4.0.0-beta.10",
     "typeface-roboto": "0.0.54"

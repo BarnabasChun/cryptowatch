@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import ReactRouterPropTypes from 'react-router-prop-types';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -45,13 +43,6 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
   </Button>
 );
 
-FollowButton.propTypes = {
-  details: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  updateWatchList: PropTypes.func.isRequired,
-  alreadyFollowing: PropTypes.bool.isRequired,
-};
-
 const CoinInfo = ({ classes, details }) => {
   const { name, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
   const priceChange = getSecondWord(CHANGEDAY);
@@ -86,11 +77,6 @@ const CoinInfo = ({ classes, details }) => {
   );
 };
 
-CoinInfo.propTypes = {
-  details: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-};
-
 const OverviewCard = ({ details, classes, className, updateWatchList, watchlist }) => {
   if (Object.keys(details).length) {
     const alreadyFollowing = !!watchlist.find(coin => coin.FROMSYMBOL === details.FROMSYMBOL);
@@ -109,23 +95,9 @@ const OverviewCard = ({ details, classes, className, updateWatchList, watchlist 
   return null;
 };
 
-OverviewCard.propTypes = {
-  details: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  updateWatchList: PropTypes.func.isRequired,
-  watchlist: PropTypes.array.isRequired,
-  className: PropTypes.string.isRequired,
-};
-
 const OverviewCardWithStyles = withStyles(styles)(OverviewCard);
 
 export default class OverviewCardContainer extends Component {
-  static propTypes = {
-    match: ReactRouterPropTypes.match.isRequired,
-    updateWatchList: PropTypes.func.isRequired,
-    watchlist: PropTypes.array.isRequired,
-  };
-
   state = {
     coinInfo: {},
   };

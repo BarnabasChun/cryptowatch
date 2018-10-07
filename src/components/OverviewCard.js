@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
-import { getSecondWord } from '../helpers';
+import { getSecondWord, getNestedValues } from '../helpers';
 
 const styles = theme => ({
   leftIcon: {
@@ -132,9 +132,7 @@ export default class OverviewCardContainer extends Component {
   getCoinInfo = async symbol => {
     const { currency } = this.props;
 
-    const updatedCoinInfo = Object.values(
-      Object.values((await getTradeInfo(symbol, currency)).DISPLAY)[0]
-    )[0];
+    const updatedCoinInfo = getNestedValues((await getTradeInfo(symbol, currency)).DISPLAY);
 
     if (this.state.coinInfo.name) {
       // over-writes every property other than name

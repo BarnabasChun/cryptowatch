@@ -133,9 +133,10 @@ export default class OverviewCardContainer extends Component {
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
     ).reduce((o, [key, value]) => {
       if (typeof value === 'number' && key !== 'LASTUPDATE') {
+        const changeSign = key.toLowerCase().includes('change') && value > 0 ? '+' : '';
         return {
           ...o,
-          [key]: formatMoney(toFixedAfterZero(value)),
+          [key]: `${changeSign}${formatMoney(toFixedAfterZero(value))}`,
         };
       }
       return {

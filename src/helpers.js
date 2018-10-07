@@ -1,4 +1,4 @@
-export const displayNumbersAfterDecimal = (n, digitsAfterZero = 2) => {
+export const toFixedAfterZero = (n, digitsAfterZero = 2) => {
   if (Number.isInteger(n)) return n;
   const [beforeDecimal, afterDecimal] = n.toString().split('.');
   const indexOfFirstNonZero = afterDecimal

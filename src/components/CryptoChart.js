@@ -113,22 +113,24 @@ export default class CryptoChart extends Component {
       },
     } = this.props;
     const { historicalData, range } = this.state;
-    if (!historicalData) return <div>Loading...</div>;
-    return (
-      <div>
-        {rangeOptions.map(({ value }) => (
-          <OptionButton
-            key={value}
-            option={value}
-            isActive={value === range}
-            updateSelected={this.updateRange}
+    if (historicalData) {
+      return (
+        <div>
+          {rangeOptions.map(({ value }) => (
+            <OptionButton
+              key={value}
+              option={value}
+              isActive={value === range}
+              updateSelected={this.updateRange}
+            />
+          ))}
+          <StockChart
+            options={getStockChartOptions(symbol, historicalData)}
+            highcharts={Highcharts}
           />
-        ))}
-        <StockChart
-          options={getStockChartOptions(symbol, historicalData)}
-          highcharts={Highcharts}
-        />
-      </div>
-    );
+        </div>
+      );
+    }
+    return null;
   }
 }

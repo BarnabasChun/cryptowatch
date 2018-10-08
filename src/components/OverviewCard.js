@@ -33,7 +33,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
     variant="contained"
     color="secondary"
     className={classes.followButton}
-    onClick={() => updateWatchList(details)}
+    onClick={() => updateWatchList(details.NAME)}
   >
     {alreadyFollowing ? (
       <CheckIcon className={classes.leftIcon} />

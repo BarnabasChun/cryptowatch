@@ -37,10 +37,8 @@ export default class App extends Component {
     watchlist: [],
   };
 
-  updateWatchList = coinDetails => {
-    const indexToRemove = this.state.watchlist.findIndex(
-      x => x.FROMSYMBOL === coinDetails.FROMSYMBOL
-    );
+  updateWatchList = coinName => {
+    const indexToRemove = this.state.watchlist.findIndex(x => x === coinName);
 
     // remove from list if already present
     if (indexToRemove !== -1) {
@@ -51,7 +49,7 @@ export default class App extends Component {
       });
     } else {
       this.setState(({ watchlist }) => ({
-        watchlist: [...watchlist, coinDetails],
+        watchlist: [...watchlist, coinName],
       }));
     }
   };

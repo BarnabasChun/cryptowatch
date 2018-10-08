@@ -163,7 +163,11 @@ export default class App extends Component {
         let tableData;
 
         const dataIncludesMoneySymbol = ['B', 'M', 'K'].some(symbol =>
-          watchlist.some(data => getLastChar(data[columnToSort]).includes(symbol))
+          watchlist.some(data =>
+            getLastChar(data[columnToSort])
+              .toUpperCase()
+              .includes(symbol)
+          )
         );
 
         const dataIncludesPlusSign = watchlist.some(data =>

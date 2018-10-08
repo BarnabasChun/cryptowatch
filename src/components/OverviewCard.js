@@ -131,19 +131,16 @@ export default class OverviewCardContainer extends Component {
 
     const updatedCoinInfo = Object.entries(
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
-    ).reduce((o, [key, value]) => {
-      if (typeof value === 'number' && key !== 'LASTUPDATE') {
-        const changeSign = key.toLowerCase().includes('change') && value > 0 ? '+' : '';
-        return {
-          ...o,
-          [key]: `${changeSign}${formatMoney(toFixedAfterZero(value))}`,
-        };
-      }
-      return {
+    ).reduce(
+      (o, [key, value]) => ({
         ...o,
-        [key]: value,
-      };
-    }, {});
+        [key]:
+          typeof value === 'number' && key !== 'LASTUPDATE'
+            ? formatMoney(toFixedAfterZero(value))
+            : value,
+      }),
+      {}
+    );
 
     if (this.state.coinInfo.name) {
       // over-writes every property other than name

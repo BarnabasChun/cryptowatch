@@ -128,19 +128,18 @@ export default class OverviewCardContainer extends Component {
 
   getCoinInfo = async symbol => {
     const { currency } = this.props;
-
     const updatedCoinInfo = Object.entries(
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
-    ).reduce(
-      (o, [key, value]) => ({
+    ).reduce((o, [key, value]) => {
+      const changeSymbol = key.toLowerCase().includes('change') && value > 0 ? '+' : '';
+      return {
         ...o,
         [key]:
           typeof value === 'number' && key !== 'LASTUPDATE'
-            ? formatMoney(toFixedAfterZero(value))
+            ? `${changeSymbol}${formatMoney(toFixedAfterZero(value))}`
             : value,
-      }),
-      {}
-    );
+      };
+    }, {});
 
     if (this.state.coinInfo.name) {
       // over-writes every property other than name

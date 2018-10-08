@@ -151,8 +151,8 @@ const Watchlist = ({ watchlist, updateWatchList, ...props }) => (
           {...props}
         />
       ) : (
-        <Typography variant="display1">
-          You are not following any coins. Search for one and add it to your watchlist.
+        <Typography variant="body2">
+          Your watchlist is empty. Search for cryptocurrencies to follow.
         </Typography>
       )}
     </Wrapper>

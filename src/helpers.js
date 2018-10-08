@@ -43,3 +43,5 @@ export const getChangeColour = n => {
   }
   return changeColour;
 };
+
+export const getLastChar = s => s.charAt(s.length - 1);

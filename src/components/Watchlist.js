@@ -8,6 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
 import { Wrapper } from './utils';
@@ -70,14 +71,28 @@ const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
   </TableRow>
 );
 
-const DataTable = ({ data, headers, updateWatchList, ...props }) => (
+const DataTable = ({
+  data,
+  headers,
+  updateWatchList,
+  handleSort,
+  columnToSort,
+  sortDirection,
+  ...props
+}) => (
   <Paper>
     <Table>
       <TableHead>
         <TableRow>
           {headers.map(header => (
             <TableCell key={header.name} numeric={header.numeric}>
-              {header.name}
+              <TableSortLabel
+                active={columnToSort === header.prop}
+                onClick={() => handleSort(header.prop)}
+                direction={sortDirection}
+              >
+                {header.name}
+              </TableSortLabel>
             </TableCell>
           ))}
           <TableCell>&nbsp;</TableCell>
@@ -104,7 +119,14 @@ const StyledWatchList = styled.div`
   padding: 60px 0;
 `;
 
-const Watchlist = ({ watchlist, updateWatchList, ...props }) => (
+const Watchlist = ({
+  watchlist,
+  updateWatchList,
+  handleSort,
+  columnToSort,
+  sortDirection,
+  ...props
+}) => (
   <StyledWatchList>
     <Wrapper>
       <Typography variant="headline" style={{ marginBottom: '20px' }}>
@@ -112,7 +134,10 @@ const Watchlist = ({ watchlist, updateWatchList, ...props }) => (
       </Typography>
       {watchlist.length ? (
         <StyledDataTable
+          handleSort={handleSort}
           updateWatchList={updateWatchList}
+          sortDirection={sortDirection}
+          columnToSort={columnToSort}
           data={watchlist}
           headers={[
             {

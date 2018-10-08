@@ -38,7 +38,7 @@ const StyledLink = styled(Link)`
   font-weight: 600;
 `;
 
-const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
+const DataTableRow = ({ data, headers, updateWatchList }) => (
   <TableRow>
     {headers.map((header, j) => {
       const cellData = data[header.prop];
@@ -53,7 +53,7 @@ const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
           scope="row"
           numeric={header.numeric}
         >
-          <StyledLink to={`${url}/${data.FROMSYMBOL}/overview`}>{cellData}</StyledLink>
+          <StyledLink to={`/coins/${data.FROMSYMBOL}/overview`}>{cellData}</StyledLink>
         </TableCell>
       ) : (
         <TableCell

@@ -62,7 +62,7 @@ export default class App extends Component {
         TOTALVOLUME24HTO: '23.60M',
         TYPE: '5',
         VOLUME24HOUR: '0',
-        name: 'Dogecoin (DOGE)',
+        NAME: 'Dogecoin (DOGE)',
       },
       {
         CHANGE24HOUR: '+4.53',
@@ -94,7 +94,7 @@ export default class App extends Component {
         VOLUME24HOURTO: '93.16K',
         VOLUMEDAY: '0',
         VOLUMEDAYTO: '0',
-        name: 'Ethereum (ETH)',
+        NAME: 'Ethereum (ETH)',
       },
       {
         CHANGE24HOUR: '+190.17',
@@ -126,7 +126,7 @@ export default class App extends Component {
         VOLUME24HOURTO: '1.26M',
         VOLUMEDAY: '119.43',
         VOLUMEDAYTO: '1.09M',
-        name: 'Bitcoin (BTC)',
+        NAME: 'Bitcoin (BTC)',
       },
     ],
   };

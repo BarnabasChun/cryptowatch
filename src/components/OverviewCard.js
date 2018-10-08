@@ -45,12 +45,12 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
 );
 
 const CoinInfo = ({ classes, details }) => {
-  const { name, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
+  const { NAME, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
   const changeColour = getChangeColour(CHANGEPCTDAY);
   return (
     <div>
       <Typography component="h2" variant="title" gutterBottom>
-        {name}
+        {NAME}
       </Typography>
       <div className={classes.priceInfo}>
         <Typography component="h2" variant="headline">
@@ -156,7 +156,7 @@ export default class OverviewCardContainer extends Component {
     } else {
       // only make extra api call if necessary
       const { FullName } = (await getAllCoins()).Data[symbol];
-      updatedCoinInfo.name = FullName;
+      updatedCoinInfo.NAME = FullName;
       this.setState({
         coinInfo: updatedCoinInfo,
       });

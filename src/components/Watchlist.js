@@ -143,7 +143,7 @@ const Watchlist = ({
             {
               name: 'Name',
               numeric: false,
-              prop: 'name',
+              prop: 'NAME',
             },
             {
               name: 'Price',

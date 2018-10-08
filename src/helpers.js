@@ -43,4 +43,14 @@ export const getChangeColour = n => {
   return changeColour;
 };
 
-export const getLastChar = s => s.charAt(s.length - 1);
+export const formatTradeInfo = obj =>
+  Object.entries(obj).reduce((o, [key, value]) => {
+    const changeSymbol = key.toLowerCase().includes('change') && value > 0 ? '+' : '';
+    return {
+      ...o,
+      [key]:
+        typeof value === 'number' && key !== 'LASTUPDATE'
+          ? `${changeSymbol}${formatMoney(toFixedAfterZero(value))}`
+          : value,
+    };
+  }, {});

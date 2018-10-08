@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import Link from 'react-router-dom/Link';
 import { withStyles } from '@material-ui/core/styles';
@@ -11,8 +11,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
+import orderBy from 'lodash/orderBy';
 import { Wrapper } from './utils';
-import { getChangeColour } from '../helpers';
+import { getChangeColour, getNestedValues, formatTradeInfo } from '../helpers';
+import { getTradeInfo, getAllCoins } from '../api';
 
 const styles = theme => ({
   root: {
@@ -66,7 +68,7 @@ const DataTableRow = ({ data, headers, updateWatchList, match: { url } }) => (
       );
     })}
     <TableCell>
-      <StyledDeleteIcon onClick={() => updateWatchList(data)} />
+      <StyledDeleteIcon onClick={() => updateWatchList(data.FROMSYMBOL)} />
     </TableCell>
   </TableRow>
 );
@@ -120,72 +122,145 @@ const StyledWatchList = styled.div`
   padding: 60px 0;
 `;
 
-const Watchlist = ({
-  watchlist,
-  updateWatchList,
-  handleSort,
-  columnToSort,
-  sortDirection,
-  ...props
-}) => (
-  <StyledWatchList>
-    <Wrapper>
-      <Typography variant="headline" style={{ marginBottom: '20px' }}>
-        Your Watchlist
-      </Typography>
-      {watchlist.length ? (
-        <StyledDataTable
-          handleSort={handleSort}
-          updateWatchList={updateWatchList}
-          sortDirection={sortDirection}
-          columnToSort={columnToSort}
-          data={watchlist}
-          headers={[
-            {
-              name: 'Name',
-              numeric: false,
-              prop: 'NAME',
-            },
-            {
-              name: 'Price',
-              numeric: true,
-              prop: 'PRICE',
-            },
-            {
-              name: 'Change',
-              numeric: true,
-              prop: 'CHANGEDAY',
-            },
-            {
-              name: '% Change',
-              numeric: true,
-              prop: 'CHANGEPCTDAY',
-            },
-            {
-              name: 'Market Cap',
-              numeric: true,
-              prop: 'MKTCAP',
-            },
-            {
-              name: 'Circulating Supply',
-              numeric: true,
-              prop: 'SUPPLY',
-            },
-            {
-              name: 'Total Volume All Currencies (24Hr)',
-              numeric: true,
-              prop: 'TOTALVOLUME24HTO',
-            },
-          ]}
-          {...props}
-        />
-      ) : (
-        <Typography variant="body2">
-          Your watchlist is empty. Search for cryptocurrencies to follow.
-        </Typography>
-      )}
-    </Wrapper>
-  </StyledWatchList>
-);
+const invertSortDirection = {
+  desc: 'asc',
+  asc: 'desc',
+};
 
-export default Watchlist;
+export default class Watchlist extends Component {
+  state = {
+    rawData: [],
+    formattedData: [],
+    columnToSort: '',
+    sortDirection: 'asc',
+  };
+
+  componentDidMount() {
+    const { watchlist } = this.props;
+    if (watchlist.length === 0) return;
+
+    const symbols = watchlist.join(',');
+    this.getCoinInfo(symbols);
+    this.interval = setInterval(() => {
+      this.getCoinInfo(symbols);
+    }, 30000);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { watchlist } = this.props;
+    if (prevProps.watchlist !== watchlist) {
+      if (watchlist.length === 0) return;
+
+      const symbols = watchlist.join(',');
+      this.getCoinInfo(symbols);
+      if (!this.interval) {
+        this.interval = setInterval(() => {
+          this.getCoinInfo(symbols);
+        }, 30000);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  getCoinInfo = async symbols => {
+    const { currency } = this.props;
+    const allCoins = (await getAllCoins()).Data;
+    const rawData = Object.values((await getTradeInfo(symbols, currency)).RAW)
+      .map(getNestedValues)
+      .map(coinDetails => ({
+        ...coinDetails,
+        ...allCoins[coinDetails.FROMSYMBOL],
+      }));
+    const formattedData = rawData.map(formatTradeInfo);
+
+    this.setState({
+      formattedData,
+      rawData,
+    });
+  };
+
+  handleSort = columnName => {
+    this.setState(
+      ({ columnToSort, sortDirection }) => ({
+        columnToSort: columnName,
+        sortDirection: columnToSort === columnName ? invertSortDirection[sortDirection] : 'asc',
+      }),
+      () => {
+        const { rawData, columnToSort, sortDirection } = this.state;
+        const sortedData = orderBy(rawData, columnToSort, sortDirection);
+        const formattedSortedData = sortedData.map(formatTradeInfo);
+        this.setState({
+          formattedData: formattedSortedData,
+        });
+      }
+    );
+  };
+
+  render() {
+    const { updateWatchList, ...props } = this.props;
+    const { formattedData, columnToSort, sortDirection } = this.state;
+    return (
+      <StyledWatchList>
+        <Wrapper>
+          <Typography variant="headline" style={{ marginBottom: '20px' }}>
+            Your Watchlist
+          </Typography>
+          {formattedData.length ? (
+            <StyledDataTable
+              handleSort={this.handleSort}
+              updateWatchList={updateWatchList}
+              sortDirection={sortDirection}
+              columnToSort={columnToSort}
+              data={formattedData}
+              headers={[
+                {
+                  name: 'Name',
+                  numeric: false,
+                  prop: 'FullName',
+                },
+                {
+                  name: 'Price',
+                  numeric: true,
+                  prop: 'PRICE',
+                },
+                {
+                  name: 'Change',
+                  numeric: true,
+                  prop: 'CHANGEDAY',
+                },
+                {
+                  name: '% Change',
+                  numeric: true,
+                  prop: 'CHANGEPCTDAY',
+                },
+                {
+                  name: 'Market Cap',
+                  numeric: true,
+                  prop: 'MKTCAP',
+                },
+                {
+                  name: 'Circulating Supply',
+                  numeric: true,
+                  prop: 'SUPPLY',
+                },
+                {
+                  name: 'Total Volume All Currencies (24Hr)',
+                  numeric: true,
+                  prop: 'TOTALVOLUME24HTO',
+                },
+              ]}
+              {...props}
+            />
+          ) : (
+            <Typography variant="body2">
+              Your watchlist is empty. Search for cryptocurrencies to follow.
+            </Typography>
+          )}
+        </Wrapper>
+      </StyledWatchList>
+    );
+  }
+}

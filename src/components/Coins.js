@@ -19,6 +19,7 @@ const Coins = ({
       path={`${path}`}
       render={props => (
         <Watchlist
+          currency={currency}
           watchlist={watchlist}
           updateWatchList={updateWatchList}
           handleSort={handleSort}

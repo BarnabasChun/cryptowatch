@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
-import { getNestedValues, toFixedAfterZero, formatMoney, getChangeColour } from '../helpers';
+import { getNestedValues, getChangeColour, formatTradeInfo } from '../helpers';
 
 const styles = theme => ({
   leftIcon: {
@@ -33,7 +33,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
     variant="contained"
     color="secondary"
     className={classes.followButton}
-    onClick={() => updateWatchList(details.NAME)}
+    onClick={() => updateWatchList(details.FROMSYMBOL)}
   >
     {alreadyFollowing ? (
       <CheckIcon className={classes.leftIcon} />
@@ -76,7 +76,7 @@ const CoinInfo = ({ classes, details }) => {
 
 const OverviewCard = ({ details, classes, className, updateWatchList, watchlist }) => {
   if (Object.keys(details).length) {
-    const alreadyFollowing = !!watchlist.find(coin => coin.FROMSYMBOL === details.FROMSYMBOL);
+    const alreadyFollowing = !!watchlist.find(coin => coin === details.FROMSYMBOL);
     return (
       <div className={classNames(classes.container, className)}>
         <CoinInfo classes={classes} details={details} />
@@ -128,18 +128,9 @@ export default class OverviewCardContainer extends Component {
 
   getCoinInfo = async symbol => {
     const { currency } = this.props;
-    const updatedCoinInfo = Object.entries(
+    const updatedCoinInfo = formatTradeInfo(
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
-    ).reduce((o, [key, value]) => {
-      const changeSymbol = key.toLowerCase().includes('change') && value > 0 ? '+' : '';
-      return {
-        ...o,
-        [key]:
-          typeof value === 'number' && key !== 'LASTUPDATE'
-            ? `${changeSymbol}${formatMoney(toFixedAfterZero(value))}`
-            : value,
-      };
-    }, {});
+    );
 
     if (this.state.coinInfo.name) {
       // over-writes every property other than name

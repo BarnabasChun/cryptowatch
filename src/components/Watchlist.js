@@ -107,6 +107,9 @@ const StyledWatchList = styled.div`
 const Watchlist = ({ watchlist, updateWatchList, ...props }) => (
   <StyledWatchList>
     <Wrapper>
+      <Typography variant="headline" style={{ marginBottom: '20px' }}>
+        Your Watchlist
+      </Typography>
       {watchlist.length ? (
         <StyledDataTable
           updateWatchList={updateWatchList}

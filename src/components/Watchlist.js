@@ -128,12 +128,14 @@ const invertSortDirection = {
 };
 
 export default class Watchlist extends Component {
-  state = {
+  initialState = {
     rawData: [],
     formattedData: [],
     columnToSort: '',
     sortDirection: 'asc',
   };
+
+  state = this.initialState;
 
   componentDidMount() {
     const { watchlist } = this.props;
@@ -149,7 +151,10 @@ export default class Watchlist extends Component {
   componentDidUpdate(prevProps) {
     const { watchlist } = this.props;
     if (prevProps.watchlist !== watchlist) {
-      if (watchlist.length === 0) return;
+      if (watchlist.length === 0) {
+        this.setState(this.initialState);
+        return;
+      }
 
       const symbols = watchlist.join(',');
       this.getCoinInfo(symbols);

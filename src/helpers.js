@@ -21,7 +21,7 @@ export const getNestedValues = o => {
 
 export const formatMoney = n => {
   if (n < 1) return n;
-  if (isNaN(n) || n <= 9999) return parseFloat(n.toFixed(2));
+  if (n <= 9999) return parseFloat(n.toFixed(2));
   if (n < 1000000) return `${(n / 1000).toFixed(2)}K`;
   if (n < 10000000) return `${(n / 1000000).toFixed(2)}M`;
   if (n < 1000000000) return `${(n / 1000000).toFixed(2)}M`;
@@ -30,7 +30,6 @@ export const formatMoney = n => {
 };
 
 export const getChangeColour = n => {
-  if (isNaN(n)) return 'black';
   const normalizedN = parseFloat(n);
 
   let changeColour;

@@ -78,10 +78,11 @@ const DataTable = ({
   handleSort,
   columnToSort,
   sortDirection,
+  classes,
   ...props
 }) => (
-  <Paper>
-    <Table>
+  <Paper className={classes.root}>
+    <Table className={classes.table}>
       <TableHead>
         <TableRow>
           {headers.map(header => (

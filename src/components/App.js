@@ -29,20 +29,16 @@ export default class App extends Component {
   };
 
   updateWatchList = coinName => {
-    const indexToRemove = this.state.watchlist.findIndex(x => x === coinName);
+    const { watchlist } = this.state;
+    const indexToRemove = watchlist.indexOf(coinName);
 
     // remove from list if already present
-    if (indexToRemove !== -1) {
-      const updatedWatchList = this.state.watchlist.filter((x, i) => i !== indexToRemove);
-
-      this.setState({
-        watchlist: updatedWatchList,
-      });
-    } else {
-      this.setState(({ watchlist }) => ({
-        watchlist: [...watchlist, coinName],
-      }));
-    }
+    this.setState(({ watchlist: oldWatchList }) => ({
+      watchlist:
+        indexToRemove !== -1
+          ? oldWatchList.filter((x, i) => i !== indexToRemove)
+          : [...oldWatchList, coinName],
+    }));
   };
 
   render() {

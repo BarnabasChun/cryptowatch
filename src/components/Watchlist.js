@@ -40,25 +40,19 @@ const StyledLink = styled(Link)`
 
 const DataTableRow = ({ data, headers, updateWatchList }) => (
   <TableRow>
-    {headers.map((header, j) => {
-      const cellData = data[header.prop];
+    {headers.map(({ prop, name, numeric }, j) => {
+      const cellData = data[prop];
 
-      const colour =
-        header.numeric && header.prop.toLowerCase().includes('change') && getChangeColour(cellData);
+      const colour = numeric && prop.toLowerCase().includes('change') && getChangeColour(cellData);
 
       return j === 0 ? (
-        <TableCell
-          key={`${data.FROMSYMBOL}-${header.name}`}
-          component="th"
-          scope="row"
-          numeric={header.numeric}
-        >
+        <TableCell key={`${data.FROMSYMBOL}-${name}`} component="th" scope="row" numeric={numeric}>
           <StyledLink to={`/coins/${data.FROMSYMBOL}/overview`}>{cellData}</StyledLink>
         </TableCell>
       ) : (
         <TableCell
-          key={`${data.FROMSYMBOL}-${header.name}`}
-          numeric={header.numeric}
+          key={`${data.FROMSYMBOL}-${name}`}
+          numeric={numeric}
           style={{
             color: colour,
           }}
@@ -87,14 +81,14 @@ const DataTable = ({
     <Table className={classes.table}>
       <TableHead>
         <TableRow>
-          {headers.map(header => (
-            <TableCell key={header.name} numeric={header.numeric}>
+          {headers.map(({ numeric, name, prop }) => (
+            <TableCell key={name} numeric={numeric}>
               <TableSortLabel
-                active={columnToSort === header.prop}
-                onClick={() => handleSort(header.prop)}
+                active={columnToSort === prop}
+                onClick={() => handleSort(prop)}
                 direction={sortDirection}
               >
-                {header.name}
+                {name}
               </TableSortLabel>
             </TableCell>
           ))}

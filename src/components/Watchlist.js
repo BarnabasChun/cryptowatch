@@ -135,10 +135,9 @@ export default class Watchlist extends Component {
     const { watchlist } = this.props;
     if (watchlist.length === 0) return;
 
-    const symbols = watchlist.join(',');
-    this.getCoinInfo(symbols);
+    this.getCoinInfo(watchlist);
     this.interval = setInterval(() => {
-      this.getCoinInfo(symbols);
+      this.getCoinInfo(watchlist);
     }, 30000);
   }
 
@@ -150,11 +149,10 @@ export default class Watchlist extends Component {
         return;
       }
 
-      const symbols = watchlist.join(',');
-      this.getCoinInfo(symbols);
+      this.getCoinInfo(watchlist);
       if (!this.interval) {
         this.interval = setInterval(() => {
-          this.getCoinInfo(symbols);
+          this.getCoinInfo(watchlist);
         }, 30000);
       }
     }

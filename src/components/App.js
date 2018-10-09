@@ -28,12 +28,6 @@ export default class App extends Component {
     watchlist: [],
   };
 
-  componentDidMount() {
-    this.setState({
-      watchlist: ['BTC', 'ZRX', 'DOGE', 'ETH', 'IOT', 'NEO', 'DASH'],
-    });
-  }
-
   updateWatchList = coinName => {
     const indexToRemove = this.state.watchlist.findIndex(x => x === coinName);
 

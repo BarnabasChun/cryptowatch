@@ -171,7 +171,7 @@ export default class Watchlist extends Component {
       .map(getNestedValues)
       .map(coinDetails => ({
         ...coinDetails,
-        ...allCoins[coinDetails.FROMSYMBOL],
+        NAME: allCoins[coinDetails.FROMSYMBOL].FullName,
       }));
     const formattedData = rawData.map(formatTradeInfo);
 
@@ -218,7 +218,7 @@ export default class Watchlist extends Component {
                 {
                   name: 'Name',
                   numeric: false,
-                  prop: 'FullName',
+                  prop: 'NAME',
                 },
                 {
                   name: 'Price',

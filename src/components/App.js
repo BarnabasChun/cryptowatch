@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import Overview from './Overview';
+import Watchlist from './Watchlist';
+import Coins from './Coins';
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -27,21 +28,17 @@ export default class App extends Component {
     watchlist: [],
   };
 
-  updateWatchList = (updateType, coinDetails) => {
-    if (updateType === 'ADD') {
-      this.setState(({ watchlist }) => ({
-        watchlist: [...watchlist, coinDetails],
-      }));
-    } else {
-      const { watchlist } = this.state;
-      const indexToRemove = watchlist.findIndex(x => x.FROMSYMBOL === coinDetails.FROMSYMBOL);
+  updateWatchList = coinName => {
+    const { watchlist } = this.state;
+    const indexToRemove = watchlist.indexOf(coinName);
 
-      const updatedWatchList = watchlist.filter((x, i) => i !== indexToRemove);
-
-      this.setState({
-        watchlist: updatedWatchList,
-      });
-    }
+    // remove from list if already present
+    this.setState(({ watchlist: oldWatchList }) => ({
+      watchlist:
+        indexToRemove !== -1
+          ? oldWatchList.filter((x, i) => i !== indexToRemove)
+          : [...oldWatchList, coinName],
+    }));
   };
 
   render() {
@@ -51,11 +48,22 @@ export default class App extends Component {
         <GlobalStyle />
         <Router>
           <Switch>
-            <Route exact path="/" component={() => <div>Watchlist</div>} />
             <Route
-              path="/coins/:symbol/overview"
+              exact
+              path="/"
               render={props => (
-                <Overview
+                <Watchlist
+                  currency={currency}
+                  watchlist={watchlist}
+                  updateWatchList={this.updateWatchList}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              path="/coins"
+              render={props => (
+                <Coins
                   currency={currency}
                   updateWatchList={this.updateWatchList}
                   watchlist={watchlist}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -6,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import { getTradeInfo, getAllCoins } from '../api';
-import { getSecondWord, getNestedValues } from '../helpers';
+import { getNestedValues, getChangeColour, formatTradeInfo } from '../helpers';
 
 const styles = theme => ({
   leftIcon: {
@@ -32,7 +33,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
     variant="contained"
     color="secondary"
     className={classes.followButton}
-    onClick={() => updateWatchList(alreadyFollowing ? 'REMOVE' : 'ADD', details)}
+    onClick={() => updateWatchList(details.FROMSYMBOL)}
   >
     {alreadyFollowing ? (
       <CheckIcon className={classes.leftIcon} />
@@ -44,22 +45,16 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
 );
 
 const CoinInfo = ({ classes, details }) => {
-  const { name, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
-  const priceChange = getSecondWord(CHANGEDAY);
-  let changeColour = 'black';
-  if (priceChange > 0) {
-    changeColour = 'green';
-  } else {
-    changeColour = 'red';
-  }
+  const { NAME, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
+  const changeColour = getChangeColour(CHANGEPCTDAY);
   return (
     <div>
       <Typography component="h2" variant="title" gutterBottom>
-        {name}
+        {NAME}
       </Typography>
       <div className={classes.priceInfo}>
         <Typography component="h2" variant="headline">
-          {getSecondWord(PRICE)}
+          {PRICE}
         </Typography>
         <Typography
           component="h2"
@@ -68,18 +63,20 @@ const CoinInfo = ({ classes, details }) => {
             color: changeColour,
           }}
         >
-          {priceChange} ({CHANGEPCTDAY}
+          {CHANGEDAY} ({CHANGEPCTDAY}
           %)
         </Typography>
       </div>
-      <Typography variant="subheading">Last updated: {LASTUPDATE}</Typography>
+      <Typography variant="subheading">
+        Last updated: {moment(LASTUPDATE * 1000).fromNow()}
+      </Typography>
     </div>
   );
 };
 
 const OverviewCard = ({ details, classes, className, updateWatchList, watchlist }) => {
   if (Object.keys(details).length) {
-    const alreadyFollowing = !!watchlist.find(coin => coin.FROMSYMBOL === details.FROMSYMBOL);
+    const alreadyFollowing = !!watchlist.find(coin => coin === details.FROMSYMBOL);
     return (
       <div className={classNames(classes.container, className)}>
         <CoinInfo classes={classes} details={details} />
@@ -131,8 +128,9 @@ export default class OverviewCardContainer extends Component {
 
   getCoinInfo = async symbol => {
     const { currency } = this.props;
-
-    const updatedCoinInfo = getNestedValues((await getTradeInfo(symbol, currency)).DISPLAY);
+    const updatedCoinInfo = formatTradeInfo(
+      getNestedValues((await getTradeInfo(symbol, currency)).RAW)
+    );
 
     if (this.state.coinInfo.name) {
       // over-writes every property other than name
@@ -145,7 +143,7 @@ export default class OverviewCardContainer extends Component {
     } else {
       // only make extra api call if necessary
       const { FullName } = (await getAllCoins()).Data[symbol];
-      updatedCoinInfo.name = FullName;
+      updatedCoinInfo.NAME = FullName;
       this.setState({
         coinInfo: updatedCoinInfo,
       });

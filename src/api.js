@@ -10,8 +10,10 @@ const getCryptoCompareData = params =>
     .then(res => res.data)
     .catch(err => console.log(err));
 
-export const getTradeInfo = (symbol, currency) =>
-  getCryptoCompareData(`pricemultifull?fsyms=${symbol}&tsyms=${currency}`);
+export const getTradeInfo = (symbols, currency) => {
+  const symbolsList = Array.isArray(symbols) ? symbols.join(',') : symbols;
+  return getCryptoCompareData(`pricemultifull?fsyms=${symbolsList}&tsyms=${currency}`);
+};
 
 export const getAllCoins = () => getCryptoCompareData('all/coinlist');
 

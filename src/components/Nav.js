@@ -49,12 +49,23 @@ const navStyles = theme => ({
   },
 });
 
-const Nav = ({ classes, isLoggedIn }) => (
+const CurrencySelect = ({ currency, onChange }) => (
+  <Select variant="filled" value={currency} onChange={onChange} name="currency">
+    {['USD', 'CAD', 'EUR'].map(x => (
+      <MenuItem key={x} value={x}>
+        {x}
+      </MenuItem>
+    ))}
+  </Select>
+);
+
+const Nav = ({ classes, isLoggedIn, currency, onChange }) => (
   <AppBar position="static" color="default">
     <Toolbar>
       <NavWrapper>
         <Logo />
         <CryptoSearchBox placeholder="Search for cryptocurrencies" classes={classes} />
+        <CurrencySelect onChange={onChange} currency={currency} />
         <Button variant="flat">{isLoggedIn ? 'Sign Out' : 'Sign In'}</Button>
       </NavWrapper>
     </Toolbar>

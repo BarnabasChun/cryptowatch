@@ -43,6 +43,12 @@ export default class App extends Component {
     }));
   };
 
+  handleChange = ({ target: { value, name } }) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
   render() {
     const { currency, watchlist, isLoggedIn } = this.state;
     return (
@@ -50,7 +56,7 @@ export default class App extends Component {
         <GlobalStyle />
         <Router>
           <>
-            <Nav isLoggedIn={isLoggedIn} />
+            <Nav isLoggedIn={isLoggedIn} currency={currency} onChange={this.handleChange} />
             <Switch>
               <Route
                 exact

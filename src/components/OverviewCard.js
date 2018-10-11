@@ -104,10 +104,11 @@ export default class OverviewCardContainer extends Component {
       match: {
         params: { symbol },
       },
+      currency,
     } = this.props;
-    this.getCoinInfo(symbol);
+    this.getCoinInfo(currency, symbol);
     this.interval = setInterval(() => {
-      this.getCoinInfo(symbol);
+      this.getCoinInfo(currency, symbol);
     }, 5000);
   }
 
@@ -116,12 +117,13 @@ export default class OverviewCardContainer extends Component {
       match: {
         params: { symbol },
       },
+      currency,
     } = this.props;
-    if (prevProps.match.params.symbol !== symbol) {
+    if (prevProps.match.params.symbol !== symbol || prevProps.currency !== currency) {
       clearInterval(this.interval);
-      this.getCoinInfo(symbol);
+      this.getCoinInfo(currency, symbol);
       this.interval = setInterval(() => {
-        this.getCoinInfo(symbol);
+        this.getCoinInfo(currency, symbol);
       }, 5000);
     }
   }
@@ -130,8 +132,7 @@ export default class OverviewCardContainer extends Component {
     clearInterval(this.interval);
   }
 
-  getCoinInfo = async symbol => {
-    const { currency } = this.props;
+  getCoinInfo = async (currency, symbol) => {
     const updatedCoinInfo = formatTradeInfo(
       getNestedValues((await getTradeInfo(symbol, currency)).RAW)
     );

@@ -47,33 +47,35 @@ export default class App extends Component {
     return (
       <div>
         <GlobalStyle />
-        <Nav />
         <Router>
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <Watchlist
-                  currency={currency}
-                  watchlist={watchlist}
-                  updateWatchList={this.updateWatchList}
-                  {...props}
-                />
-              )}
-            />
-            <Route
-              path="/coins"
-              render={props => (
-                <Coins
-                  currency={currency}
-                  updateWatchList={this.updateWatchList}
-                  watchlist={watchlist}
-                  {...props}
-                />
-              )}
-            />
-          </Switch>
+          <>
+            <Nav />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <Watchlist
+                    currency={currency}
+                    watchlist={watchlist}
+                    updateWatchList={this.updateWatchList}
+                    {...props}
+                  />
+                )}
+              />
+              <Route
+                path="/coins"
+                render={props => (
+                  <Coins
+                    currency={currency}
+                    updateWatchList={this.updateWatchList}
+                    watchlist={watchlist}
+                    {...props}
+                  />
+                )}
+              />
+            </Switch>
+          </>
         </Router>
       </div>
     );

@@ -8,7 +8,7 @@ const NavWrapper = styled(Wrapper)``;
 const Nav = () => (
   <nav>
     <NavWrapper>
-      <CryptoSearchBox />
+      <CryptoSearchBox placeholder="Search for cryptocurrencies" />
     </NavWrapper>
   </nav>
 );

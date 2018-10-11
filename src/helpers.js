@@ -54,3 +54,5 @@ export const formatTradeInfo = obj =>
           : value,
     };
   }, {});
+
+export const removeParenthesis = str => str.replace(/[()]/g, '');

@@ -132,27 +132,27 @@ export default class Watchlist extends Component {
   state = this.initialState;
 
   componentDidMount() {
-    const { watchlist } = this.props;
+    const { watchlist, currency } = this.props;
     if (watchlist.length === 0) return;
 
-    this.getCoinInfo(watchlist);
+    this.getCoinInfo(currency, watchlist);
     this.interval = setInterval(() => {
-      this.getCoinInfo(watchlist);
+      this.getCoinInfo(currency, watchlist);
     }, 30000);
   }
 
   componentDidUpdate(prevProps) {
-    const { watchlist } = this.props;
-    if (prevProps.watchlist !== watchlist) {
+    const { watchlist, currency } = this.props;
+    if (prevProps.watchlist !== watchlist || prevProps.currency !== currency) {
       if (watchlist.length === 0) {
         this.setState(this.initialState);
         return;
       }
 
-      this.getCoinInfo(watchlist);
+      this.getCoinInfo(currency, watchlist);
       if (!this.interval) {
         this.interval = setInterval(() => {
-          this.getCoinInfo(watchlist);
+          this.getCoinInfo(currency, watchlist);
         }, 30000);
       }
     }
@@ -162,8 +162,7 @@ export default class Watchlist extends Component {
     clearInterval(this.interval);
   }
 
-  getCoinInfo = async symbols => {
-    const { currency } = this.props;
+  getCoinInfo = async (currency, symbols) => {
     const allCoins = (await getAllCoins()).Data;
     const rawData = Object.values((await getTradeInfo(symbols, currency)).RAW)
       .map(getNestedValues)

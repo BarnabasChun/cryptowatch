@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import Nav from './Nav';
 import Watchlist from './Watchlist';
 import Coins from './Coins';
 
@@ -26,6 +27,7 @@ export default class App extends Component {
   state = {
     currency: 'CAD',
     watchlist: [],
+    isLoggedIn: false,
   };
 
   updateWatchList = coinName => {
@@ -41,37 +43,46 @@ export default class App extends Component {
     }));
   };
 
+  handleChange = ({ target: { value, name } }) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
   render() {
-    const { currency, watchlist } = this.state;
+    const { currency, watchlist, isLoggedIn } = this.state;
     return (
       <div>
         <GlobalStyle />
         <Router>
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <Watchlist
-                  currency={currency}
-                  watchlist={watchlist}
-                  updateWatchList={this.updateWatchList}
-                  {...props}
-                />
-              )}
-            />
-            <Route
-              path="/coins"
-              render={props => (
-                <Coins
-                  currency={currency}
-                  updateWatchList={this.updateWatchList}
-                  watchlist={watchlist}
-                  {...props}
-                />
-              )}
-            />
-          </Switch>
+          <>
+            <Nav isLoggedIn={isLoggedIn} currency={currency} onChange={this.handleChange} />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <Watchlist
+                    currency={currency}
+                    watchlist={watchlist}
+                    updateWatchList={this.updateWatchList}
+                    {...props}
+                  />
+                )}
+              />
+              <Route
+                path="/coins"
+                render={props => (
+                  <Coins
+                    currency={currency}
+                    updateWatchList={this.updateWatchList}
+                    watchlist={watchlist}
+                    {...props}
+                  />
+                )}
+              />
+            </Switch>
+          </>
         </Router>
       </div>
     );

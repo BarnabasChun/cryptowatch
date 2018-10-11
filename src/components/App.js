@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import Nav from './Nav';
 import Watchlist from './Watchlist';
 import Coins from './Coins';
 
@@ -46,6 +47,7 @@ export default class App extends Component {
     return (
       <div>
         <GlobalStyle />
+        <Nav />
         <Router>
           <Switch>
             <Route

@@ -9,7 +9,11 @@ import CryptoSearchBox from './CryptoSearchBox';
 import { Wrapper } from './utils';
 import Logo from './Logo';
 
-const NavWrapper = styled(Wrapper)``;
+const NavWrapper = styled(Wrapper)`
+  display: grid;
+  grid-template-columns: max-content 1fr repeat(2, max-content);
+  grid-gap: 60px;
+`;
 
 const navStyles = theme => ({
   search: {

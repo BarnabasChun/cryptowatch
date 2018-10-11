@@ -79,7 +79,7 @@ const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }
         maxRanking: matchSorter.rankings.WORD_STARTS_WITH,
       }).slice(0, 5);
       return (
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', maxWidth: '640px' }}>
           <SearchInput inputProps={getInputProps} placeholder={placeholder} classes={classes} />
           {isOpen &&
             !!inputValue.length &&

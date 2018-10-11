@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import withRouter from 'react-router-dom/withRouter';
 import Downshift from 'downshift';
+import styled from 'styled-components';
 import matchSorter from 'match-sorter';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
@@ -54,6 +55,15 @@ const SearchSuggestions = ({
   );
 };
 
+const SuggestionsContainer = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: -5px 5px 10px 0px rgba(0, 0, 0, 0.25);
+  z-index: 9;
+`;
+
 const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }) => (
   <Downshift onChange={onChange} defaultHighlightedIndex={0} defaultSelectedItem={selectedCoin}>
     {({
@@ -69,12 +79,12 @@ const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }
         maxRanking: matchSorter.rankings.WORD_STARTS_WITH,
       }).slice(0, 5);
       return (
-        <div>
+        <div style={{ position: 'relative' }}>
           <SearchInput inputProps={getInputProps} placeholder={placeholder} classes={classes} />
           {isOpen &&
             !!inputValue.length &&
             !!filteredItems.length && (
-              <div>
+              <SuggestionsContainer>
                 {filteredItems.map((item, index) => (
                   <SearchSuggestions
                     key={item.Id}
@@ -85,7 +95,7 @@ const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }
                     index={index}
                   />
                 ))}
-              </div>
+              </SuggestionsContainer>
             )}
         </div>
       );

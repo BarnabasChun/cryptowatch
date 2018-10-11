@@ -49,7 +49,7 @@ const navStyles = theme => ({
 });
 
 const Nav = ({ classes }) => (
-  <AppBar position="static">
+  <AppBar position="static" color="default">
     <Toolbar>
       <NavWrapper>
         <Logo />

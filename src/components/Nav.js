@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import CryptoSearchBox from './CryptoSearchBox';
@@ -48,12 +49,13 @@ const navStyles = theme => ({
   },
 });
 
-const Nav = ({ classes }) => (
+const Nav = ({ classes, isLoggedIn }) => (
   <AppBar position="static" color="default">
     <Toolbar>
       <NavWrapper>
         <Logo />
         <CryptoSearchBox placeholder="Search for cryptocurrencies" classes={classes} />
+        <Button variant="flat">{isLoggedIn ? 'Sign Out' : 'Sign In'}</Button>
       </NavWrapper>
     </Toolbar>
   </AppBar>

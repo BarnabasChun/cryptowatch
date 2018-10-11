@@ -27,6 +27,7 @@ export default class App extends Component {
   state = {
     currency: 'CAD',
     watchlist: [],
+    isLoggedIn: false,
   };
 
   updateWatchList = coinName => {
@@ -43,13 +44,13 @@ export default class App extends Component {
   };
 
   render() {
-    const { currency, watchlist } = this.state;
+    const { currency, watchlist, isLoggedIn } = this.state;
     return (
       <div>
         <GlobalStyle />
         <Router>
           <>
-            <Nav />
+            <Nav isLoggedIn={isLoggedIn} />
             <Switch>
               <Route
                 exact

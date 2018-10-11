@@ -36,7 +36,6 @@ const SearchSuggestions = ({
 }) => {
   const isHighlighted = highlightedIndex === index;
   const isSelected = (selectedItem || '').indexOf(FullName) > -1;
-  // const isSelected = selectedItem === FullName;
 
   return (
     <MenuItem

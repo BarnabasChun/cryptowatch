@@ -70,7 +70,7 @@ const Nav = ({ classes, isLoggedIn, currency, onChange }) => (
     <Toolbar>
       <NavWrapper>
         <Logo />
-        <CryptoSearchBox placeholder="Search for cryptocurrencies" classes={classes} />
+        <CryptoSearchBox placeholder="Search" classes={classes} />
         <CurrencySelect onChange={onChange} currency={currency} />
         <Button variant="flat">{isLoggedIn ? 'Sign Out' : 'Sign In'}</Button>
       </NavWrapper>

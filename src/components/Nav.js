@@ -8,13 +8,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import CryptoSearchBox from './CryptoSearchBox';
-import { Wrapper } from './utils';
 import Logo from './Logo';
 
-const NavWrapper = styled(Wrapper)`
+const NavWrapper = styled.div`
+  width: 100%;
   display: grid;
   grid-template-columns: max-content 1fr repeat(2, max-content);
-  grid-gap: 60px;
+  grid-gap: 10px;
 `;
 
 const navStyles = theme => ({

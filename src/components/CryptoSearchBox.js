@@ -28,7 +28,7 @@ const SearchInput = ({ classes, inputProps, placeholder }) => (
   </div>
 );
 
-const SearchSuggestions = ({
+const SearchSuggestion = ({
   suggestion: { Id, FullName },
   index,
   itemProps,
@@ -55,7 +55,8 @@ const SearchSuggestions = ({
   );
 };
 
-const SuggestionsContainer = styled.div`
+const SuggestionsWrapper = styled.div`
+  border-radius: 5px;
   position: absolute;
   left: 0;
   right: 0;
@@ -84,9 +85,9 @@ const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }
           {isOpen &&
             !!inputValue.length &&
             !!filteredItems.length && (
-              <SuggestionsContainer>
+              <SuggestionsWrapper>
                 {filteredItems.map((item, index) => (
-                  <SearchSuggestions
+                  <SearchSuggestion
                     key={item.Id}
                     suggestion={item}
                     itemProps={getItemProps}
@@ -95,7 +96,7 @@ const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }
                     index={index}
                   />
                 ))}
-              </SuggestionsContainer>
+              </SuggestionsWrapper>
             )}
         </div>
       );

@@ -118,7 +118,11 @@ export default class OverviewCardContainer extends Component {
       },
     } = this.props;
     if (prevProps.match.params.symbol !== symbol) {
+      clearInterval(this.interval);
       this.getCoinInfo(symbol);
+      this.interval = setInterval(() => {
+        this.getCoinInfo(symbol);
+      }, 5000);
     }
   }
 

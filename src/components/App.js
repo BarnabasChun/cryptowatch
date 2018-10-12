@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import firebase from 'firebase/app';
 import GlobalStyle from './utils';
 import Nav from './Nav';
 import Watchlist from './Watchlist';
 import Coins from './Coins';
+
+const config = {
+  apiKey: 'AIzaSyCsYU_HkObfPqy2ZYQURS_qmuuuw72j2oQ',
+  authDomain: 'cryptowatch-975fc.firebaseapp.com',
+  databaseURL: 'https://cryptowatch-975fc.firebaseio.com',
+  projectId: 'cryptowatch-975fc',
+  storageBucket: 'cryptowatch-975fc.appspot.com',
+  messagingSenderId: '603280724069',
+};
+
+firebase.initializeApp(config);
 
 export default class App extends Component {
   state = {

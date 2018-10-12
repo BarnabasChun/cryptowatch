@@ -1,34 +1,29 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
-import { createGlobalStyle } from 'styled-components';
+import firebase from '../firebase';
+import GlobalStyle from './utils';
 import Nav from './Nav';
 import Watchlist from './Watchlist';
 import Coins from './Coins';
-
-const GlobalStyle = createGlobalStyle`
-  html {
-    box-sizing: border-box;
-  }
-
-  *, 
-  *::after, 
-  *::before {
-    margin: 0;
-    padding: 0;
-    box-sizing: inherit;
-  }
-
-  a { text-decoration: none; }
-
-  ul, li { list-style: none; }
-`;
+import LoginModal from './LoginModal';
 
 export default class App extends Component {
   state = {
     currency: 'CAD',
     watchlist: [],
     isLoggedIn: false,
+    loginModalIsOpen: false,
   };
+
+  componentDidMount() {
+    this.unregisterAuthObserver = firebase
+      .auth()
+      .onAuthStateChanged(user => this.setState({ isLoggedIn: !!user }));
+  }
+
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
+  }
 
   updateWatchList = coinName => {
     const { watchlist } = this.state;
@@ -49,14 +44,26 @@ export default class App extends Component {
     });
   };
 
+  toggleModal = () => {
+    this.setState(({ loginModalIsOpen }) => ({
+      loginModalIsOpen: !loginModalIsOpen,
+    }));
+  };
+
   render() {
-    const { currency, watchlist, isLoggedIn } = this.state;
+    const { currency, watchlist, isLoggedIn, loginModalIsOpen } = this.state;
     return (
       <div>
         <GlobalStyle />
         <Router>
           <>
-            <Nav isLoggedIn={isLoggedIn} currency={currency} onChange={this.handleChange} />
+            <Nav
+              isLoggedIn={isLoggedIn}
+              currency={currency}
+              onChange={this.handleChange}
+              openModal={this.toggleModal}
+            />
+            <LoginModal isOpen={loginModalIsOpen} toggleModal={this.toggleModal} />
             <Switch>
               <Route
                 exact

@@ -5,6 +5,7 @@ import GlobalStyle from './utils';
 import Nav from './Nav';
 import Watchlist from './Watchlist';
 import Coins from './Coins';
+import LoginModal from './LoginModal';
 
 const config = {
   apiKey: 'AIzaSyCsYU_HkObfPqy2ZYQURS_qmuuuw72j2oQ',
@@ -22,7 +23,18 @@ export default class App extends Component {
     currency: 'CAD',
     watchlist: [],
     isLoggedIn: false,
+    loginModalIsOpen: false,
   };
+
+  componentDidMount() {
+    this.unregisterAuthObserver = firebase
+      .auth()
+      .onAuthStateChanged(user => this.setState({ isLoggedIn: !!user }));
+  }
+
+  componentWillUnmount() {
+    this.unregisterAuthObserver();
+  }
 
   updateWatchList = coinName => {
     const { watchlist } = this.state;
@@ -43,14 +55,26 @@ export default class App extends Component {
     });
   };
 
+  toggleModal = () => {
+    this.setState(({ loginModalIsOpen }) => ({
+      loginModalIsOpen: !loginModalIsOpen,
+    }));
+  };
+
   render() {
-    const { currency, watchlist, isLoggedIn } = this.state;
+    const { currency, watchlist, isLoggedIn, loginModalIsOpen } = this.state;
     return (
       <div>
         <GlobalStyle />
         <Router>
           <>
-            <Nav isLoggedIn={isLoggedIn} currency={currency} onChange={this.handleChange} />
+            <Nav
+              isLoggedIn={isLoggedIn}
+              currency={currency}
+              onChange={this.handleChange}
+              openModal={this.toggleModal}
+            />
+            <LoginModal isOpen={loginModalIsOpen} toggleModal={this.toggleModal} />
             <Switch>
               <Route
                 exact

@@ -15,12 +15,13 @@ const uiConfig = {
 };
 
 const StyledModal = styled.div`
+  text-align: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
-  min-width: 400px;
+  min-width: 300px;
   min-height: 400px;
   display: flex;
   justify-content: center;
@@ -28,6 +29,7 @@ const StyledModal = styled.div`
   align-items: center;
   border-radius: 8px;
   box-shadow: -5px 8px 20px rgba(0, 0, 0, 0.6);
+  padding: 20px;
 `;
 
 const ModalTitle = styled(Typography)`
@@ -37,14 +39,14 @@ const ModalTitle = styled(Typography)`
   }
 `;
 
-const LoginModal = ({ isOpen, toggleModal, displayPromptText }) => {
+const LoginModal = ({ isOpen, toggleModal, displayLoginPrompt }) => {
   const firebaseAuth = firebase.auth();
   return (
     firebaseAuth && (
       <Modal open={isOpen} onClose={toggleModal}>
         <StyledModal>
           <ModalTitle variant="title">
-            {displayPromptText
+            {displayLoginPrompt
               ? 'To access this feature please login'
               : 'Select a provider to login'}
           </ModalTitle>

@@ -13,6 +13,7 @@ export default class App extends Component {
     watchlist: [],
     isLoggedIn: false,
     loginModalIsOpen: false,
+    displayLoginPrompt: false,
   };
 
   componentDidMount() {
@@ -26,19 +27,35 @@ export default class App extends Component {
   }
 
   updateWatchList = coinName => {
-    const { watchlist } = this.state;
+    const { watchlist, isLoggedIn } = this.state;
     const indexToRemove = watchlist.indexOf(coinName);
 
-    // remove from list if already present
-    this.setState(({ watchlist: oldWatchList }) => ({
-      watchlist:
-        indexToRemove !== -1
-          ? oldWatchList.filter((x, i) => i !== indexToRemove)
-          : [...oldWatchList, coinName],
-    }));
+    if (isLoggedIn) {
+      // remove from list if already present
+      this.setState(({ watchlist: oldWatchList }) => ({
+        watchlist:
+          indexToRemove !== -1
+            ? oldWatchList.filter((x, i) => i !== indexToRemove)
+            : [...oldWatchList, coinName],
+      }));
+    } else {
+      this.promptUsertoLogin();
+    }
+  };
+
+  promptUsertoLogin = () => {
+    this.setState({
+      loginModalIsOpen: true,
+      displayLoginPrompt: true,
+    });
   };
 
   handleChange = ({ target: { value, name } }) => {
+    const { isLoggedIn } = this.state;
+    if (name === 'currency' && !isLoggedIn) {
+      this.promptUsertoLogin();
+      return;
+    }
     this.setState({
       [name]: value,
     });
@@ -51,7 +68,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { currency, watchlist, isLoggedIn, loginModalIsOpen } = this.state;
+    const { currency, watchlist, isLoggedIn, loginModalIsOpen, displayLoginPrompt } = this.state;
     return (
       <div>
         <GlobalStyle />
@@ -63,7 +80,11 @@ export default class App extends Component {
               onChange={this.handleChange}
               openModal={this.toggleModal}
             />
-            <LoginModal isOpen={loginModalIsOpen} toggleModal={this.toggleModal} />
+            <LoginModal
+              isOpen={loginModalIsOpen}
+              toggleModal={this.toggleModal}
+              displayLoginPrompt={displayLoginPrompt}
+            />
             <Switch>
               <Route
                 exact

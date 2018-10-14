@@ -9,13 +9,15 @@ import Coins from './Coins';
 import LoginModal from './LoginModal';
 
 export default class App extends Component {
-  state = {
+  initialState = {
     currency: 'CAD',
     watchlist: null,
     isLoggedIn: false,
     loginModalIsOpen: false,
     displayLoginPrompt: false,
   };
+
+  state = this.initialState;
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
@@ -81,6 +83,11 @@ export default class App extends Component {
     }));
   };
 
+  logout = () => {
+    firebase.auth().signOut();
+    this.setState(this.initialState);
+  };
+
   render() {
     const { currency, watchlist, isLoggedIn, loginModalIsOpen, displayLoginPrompt } = this.state;
     return (
@@ -93,6 +100,7 @@ export default class App extends Component {
               currency={currency}
               onChange={this.handleChange}
               openModal={this.toggleModal}
+              logout={this.logout}
             />
             <LoginModal
               isOpen={loginModalIsOpen}

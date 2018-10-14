@@ -7,7 +7,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import firebase from '../firebase';
 import 'firebase/auth';
 import CryptoSearchBox from './CryptoSearchBox';
 import Logo from './Logo';
@@ -67,17 +66,14 @@ const CurrencySelect = ({ currency, onChange }) => (
   </Select>
 );
 
-const Nav = ({ classes, isLoggedIn, currency, onChange, openModal }) => (
+const Nav = ({ classes, isLoggedIn, currency, onChange, openModal, logout }) => (
   <AppBar position="static" color="default">
     <Toolbar>
       <NavWrapper>
         <Logo />
         <CryptoSearchBox placeholder="Search" classes={classes} />
         <CurrencySelect onChange={onChange} currency={currency} />
-        <Button
-          onClick={() => (isLoggedIn ? firebase.auth().signOut() : openModal())}
-          variant="flat"
-        >
+        <Button onClick={() => (isLoggedIn ? logout() : openModal())} variant="flat">
           {isLoggedIn ? 'Sign Out' : 'Sign In'}
         </Button>
       </NavWrapper>

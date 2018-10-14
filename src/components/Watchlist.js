@@ -62,7 +62,9 @@ const DataTableRow = ({ data, headers, updateWatchList }) => (
       );
     })}
     <TableCell>
-      <StyledDeleteIcon onClick={() => updateWatchList(data.FROMSYMBOL)} />
+      <StyledDeleteIcon
+        onClick={() => updateWatchList({ symbol: data.FROMSYMBOL, alreadyFollowing: true })}
+      />
     </TableCell>
   </TableRow>
 );
@@ -133,7 +135,7 @@ export default class Watchlist extends Component {
 
   componentDidMount() {
     const { watchlist, currency } = this.props;
-    if (watchlist.length === 0) return;
+    if (watchlist === null) return;
 
     this.getCoinInfo(currency, watchlist);
     this.interval = setInterval(() => {
@@ -144,7 +146,7 @@ export default class Watchlist extends Component {
   componentDidUpdate(prevProps) {
     const { watchlist, currency } = this.props;
     if (prevProps.watchlist !== watchlist || prevProps.currency !== currency) {
-      if (watchlist.length === 0) {
+      if (watchlist === null) {
         this.setState(this.initialState);
         return;
       }
@@ -162,7 +164,8 @@ export default class Watchlist extends Component {
     clearInterval(this.interval);
   }
 
-  getCoinInfo = async (currency, symbols) => {
+  getCoinInfo = async (currency, watchlist) => {
+    const symbols = Object.keys(watchlist);
     const allCoins = (await getAllCoins()).Data;
     const rawData = Object.values((await getTradeInfo(symbols, currency)).RAW)
       .map(getNestedValues)

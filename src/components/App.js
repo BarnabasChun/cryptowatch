@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import firebase from '../firebase';
+import 'firebase/database';
 import GlobalStyle from './utils';
 import Nav from './Nav';
 import Watchlist from './Watchlist';
@@ -10,34 +11,47 @@ import LoginModal from './LoginModal';
 export default class App extends Component {
   state = {
     currency: 'CAD',
-    watchlist: [],
+    watchlist: null,
     isLoggedIn: false,
     loginModalIsOpen: false,
     displayLoginPrompt: false,
   };
 
   componentDidMount() {
-    this.unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged(user => this.setState({ isLoggedIn: !!user }));
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({ isLoggedIn: !!user });
+      if (user) {
+        const userId = firebase.auth().currentUser.uid;
+        const dbRef = firebase.database().ref(`watchlist/${userId}`);
+        dbRef.on('value', res => {
+          const watchlist = res.val();
+
+          this.setState({
+            watchlist,
+          });
+        });
+      }
+    });
   }
 
-  componentWillUnmount() {
-    this.unregisterAuthObserver();
-  }
-
-  updateWatchList = coinName => {
-    const { watchlist, isLoggedIn } = this.state;
-    const indexToRemove = watchlist.indexOf(coinName);
+  updateWatchList = ({ symbol, alreadyFollowing }) => {
+    const { isLoggedIn, watchlist } = this.state;
 
     if (isLoggedIn) {
-      // remove from list if already present
-      this.setState(({ watchlist: oldWatchList }) => ({
-        watchlist:
-          indexToRemove !== -1
-            ? oldWatchList.filter((x, i) => i !== indexToRemove)
-            : [...oldWatchList, coinName],
-      }));
+      const userId = firebase.auth().currentUser.uid;
+      const watchlistRef = `watchlist/${userId}`;
+      if (alreadyFollowing) {
+        firebase
+          .database()
+          .ref(`${watchlistRef}/${symbol}`)
+          .remove();
+      } else {
+        const watchlistTable = firebase.database().ref(watchlistRef);
+        watchlistTable.set({
+          ...watchlist,
+          [symbol]: symbol,
+        });
+      }
     } else {
       this.promptUsertoLogin();
     }

@@ -33,7 +33,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
     variant="contained"
     color="secondary"
     className={classes.followButton}
-    onClick={() => updateWatchList(details.FROMSYMBOL)}
+    onClick={() => updateWatchList({ symbol: details.FROMSYMBOL, alreadyFollowing })}
   >
     {alreadyFollowing ? (
       <CheckIcon className={classes.leftIcon} />
@@ -76,7 +76,8 @@ const CoinInfo = ({ classes, details }) => {
 
 const OverviewCard = ({ details, classes, className, updateWatchList, watchlist }) => {
   if (Object.keys(details).length) {
-    const alreadyFollowing = !!watchlist.find(coin => coin === details.FROMSYMBOL);
+    const alreadyFollowing =
+      watchlist && !!Object.keys(watchlist).find(symbol => symbol === details.FROMSYMBOL);
     return (
       <div className={classNames(classes.container, className)}>
         <CoinInfo classes={classes} details={details} />

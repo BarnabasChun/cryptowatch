@@ -8,10 +8,14 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paper from '@material-ui/core/Paper';
 import orderBy from 'lodash/orderBy';
+import TablePaginationActions from './TablePaginationActions';
+
 import { Wrapper } from './utils';
 import { getChangeColour, getNestedValues, formatTradeInfo } from '../helpers';
 import { getTradeInfo, getAllCoins } from '../api';
@@ -77,6 +81,10 @@ const DataTable = ({
   columnToSort,
   sortDirection,
   classes,
+  rowsPerPage,
+  page,
+  onChangePage,
+  onChangeRowsPerPage,
   ...props
 }) => (
   <Paper className={classes.root}>
@@ -98,7 +106,7 @@ const DataTable = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map(dataPoint => (
+        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(dataPoint => (
           <DataTableRow
             updateWatchList={updateWatchList}
             key={dataPoint.FROMSYMBOL}
@@ -108,6 +116,19 @@ const DataTable = ({
           />
         ))}
       </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TablePagination
+            colSpan={3}
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </TableRow>
+      </TableFooter>
     </Table>
   </Paper>
 );
@@ -129,6 +150,8 @@ export default class Watchlist extends Component {
     formattedData: [],
     columnToSort: '',
     sortDirection: 'asc',
+    page: 0,
+    rowsPerPage: 5,
   };
 
   state = this.initialState;
@@ -198,9 +221,17 @@ export default class Watchlist extends Component {
     );
   };
 
+  handleChangePage = (event, page) => {
+    this.setState({ page });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.setState({ rowsPerPage: event.target.value });
+  };
+
   render() {
     const { updateWatchList, ...props } = this.props;
-    const { formattedData, columnToSort, sortDirection } = this.state;
+    const { formattedData, columnToSort, sortDirection, rowsPerPage, page } = this.state;
     return (
       <StyledWatchList>
         <Wrapper>
@@ -214,6 +245,10 @@ export default class Watchlist extends Component {
               sortDirection={sortDirection}
               columnToSort={columnToSort}
               data={formattedData}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
               headers={[
                 {
                   name: 'Name',

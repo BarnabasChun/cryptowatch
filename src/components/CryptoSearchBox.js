@@ -4,6 +4,7 @@ import Downshift from 'downshift';
 import styled from 'styled-components';
 import matchSorter from 'match-sorter';
 import SearchIcon from '@material-ui/icons/Search';
+import BackIcon from '@material-ui/icons/ArrowBack';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import last from 'lodash/last';
@@ -11,7 +12,19 @@ import { getAllCoins } from '../api';
 import { removeParenthesis } from '../helpers';
 import { ErrorText } from './utils';
 
-const SearchInput = ({ classes, inputProps, placeholder }) => (
+const SearchBackIcon = styled(BackIcon)`
+  margin-right: 10px;
+  cursor: pointer;
+
+  &&& {
+    display: none;
+    @media only screen and (max-width: 650px) {
+      display: block;
+    }
+  }
+`;
+
+const SearchInput = ({ classes, inputProps, placeholder, onBlur }) => (
   <div className={classes.search}>
     <div className={classes.searchIcon}>
       <SearchIcon />
@@ -20,6 +33,7 @@ const SearchInput = ({ classes, inputProps, placeholder }) => (
       {...inputProps({
         placeholder,
       })}
+      onBlur={onBlur}
       disableUnderline
       classes={{
         root: classes.inputRoot,
@@ -59,6 +73,7 @@ const SearchSuggestion = ({
 const SuggestionsWrapper = styled.div`
   border-radius: 5px;
   position: absolute;
+  top: 100%;
   left: 0;
   right: 0;
   background: white;
@@ -66,7 +81,15 @@ const SuggestionsWrapper = styled.div`
   z-index: 9;
 `;
 
-const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }) => (
+const CryptoSearchBox = ({
+  classes,
+  onChange,
+  selectedCoin,
+  coins,
+  placeholder,
+  className,
+  toggleFullSearchBox,
+}) => (
   <Downshift onChange={onChange} defaultHighlightedIndex={0} defaultSelectedItem={selectedCoin}>
     {({
       getInputProps, // Props to pass to the input
@@ -80,9 +103,16 @@ const CryptoSearchBox = ({ classes, onChange, selectedCoin, coins, placeholder }
         keys: ['Name', 'CoinName'],
         maxRanking: matchSorter.rankings.WORD_STARTS_WITH,
       }).slice(0, 5);
+
       return (
-        <div style={{ position: 'relative', maxWidth: '640px' }}>
-          <SearchInput inputProps={getInputProps} placeholder={placeholder} classes={classes} />
+        <div style={{ position: 'relative', maxWidth: '640px' }} className={className}>
+          <SearchBackIcon onClick={toggleFullSearchBox} />
+          <SearchInput
+            inputProps={getInputProps}
+            placeholder={placeholder}
+            classes={classes}
+            onBlur={toggleFullSearchBox}
+          />
           {isOpen &&
             !!inputValue.trim().length &&
             !!filteredItems.length && (
@@ -139,13 +169,15 @@ class CryptoSearchBoxContainer extends Component {
   };
 
   render() {
-    const { placeholder, classes } = this.props;
+    const { placeholder, classes, className, toggleFullSearchBox } = this.props;
     const { coins, selectedCoin, hasError } = this.state;
     if (!hasError) {
       return (
         <CryptoSearchBox
+          className={className}
           classes={classes}
           coins={coins}
+          toggleFullSearchBox={toggleFullSearchBox}
           selectedCoin={selectedCoin}
           onChange={this.handleChange}
           placeholder={placeholder}

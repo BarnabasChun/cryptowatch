@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import firebase from '../firebase';
+import 'firebase/database';
 import GlobalStyle from './utils';
 import Nav from './Nav';
 import Watchlist from './Watchlist';
@@ -8,37 +9,69 @@ import Coins from './Coins';
 import LoginModal from './LoginModal';
 
 export default class App extends Component {
-  state = {
+  initialState = {
     currency: 'CAD',
-    watchlist: [],
+    watchlist: null,
     isLoggedIn: false,
     loginModalIsOpen: false,
+    displayLoginPrompt: false,
   };
 
+  state = this.initialState;
+
   componentDidMount() {
-    this.unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged(user => this.setState({ isLoggedIn: !!user }));
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({ isLoggedIn: !!user });
+      if (user) {
+        const userId = firebase.auth().currentUser.uid;
+        const dbRef = firebase.database().ref(`watchlist/${userId}`);
+        dbRef.on('value', res => {
+          const watchlist = res.val();
+
+          this.setState({
+            watchlist,
+          });
+        });
+      }
+    });
   }
 
-  componentWillUnmount() {
-    this.unregisterAuthObserver();
-  }
+  updateWatchList = ({ symbol, alreadyFollowing }) => {
+    const { isLoggedIn, watchlist } = this.state;
 
-  updateWatchList = coinName => {
-    const { watchlist } = this.state;
-    const indexToRemove = watchlist.indexOf(coinName);
+    if (isLoggedIn) {
+      const userId = firebase.auth().currentUser.uid;
 
-    // remove from list if already present
-    this.setState(({ watchlist: oldWatchList }) => ({
-      watchlist:
-        indexToRemove !== -1
-          ? oldWatchList.filter((x, i) => i !== indexToRemove)
-          : [...oldWatchList, coinName],
-    }));
+      const watchlistTable = firebase
+        .database()
+        .ref(`watchlist/${userId}/${alreadyFollowing ? symbol : ''}`);
+
+      if (alreadyFollowing) {
+        watchlistTable.remove();
+      } else {
+        watchlistTable.set({
+          ...watchlist,
+          [symbol]: symbol,
+        });
+      }
+    } else {
+      this.promptUsertoLogin();
+    }
+  };
+
+  promptUsertoLogin = () => {
+    this.setState({
+      loginModalIsOpen: true,
+      displayLoginPrompt: true,
+    });
   };
 
   handleChange = ({ target: { value, name } }) => {
+    const { isLoggedIn } = this.state;
+    if (name === 'currency' && !isLoggedIn) {
+      this.promptUsertoLogin();
+      return;
+    }
     this.setState({
       [name]: value,
     });
@@ -50,8 +83,13 @@ export default class App extends Component {
     }));
   };
 
+  logout = () => {
+    firebase.auth().signOut();
+    this.setState(this.initialState);
+  };
+
   render() {
-    const { currency, watchlist, isLoggedIn, loginModalIsOpen } = this.state;
+    const { currency, watchlist, isLoggedIn, loginModalIsOpen, displayLoginPrompt } = this.state;
     return (
       <div>
         <GlobalStyle />
@@ -62,8 +100,13 @@ export default class App extends Component {
               currency={currency}
               onChange={this.handleChange}
               openModal={this.toggleModal}
+              logout={this.logout}
             />
-            <LoginModal isOpen={loginModalIsOpen} toggleModal={this.toggleModal} />
+            <LoginModal
+              isOpen={loginModalIsOpen}
+              toggleModal={this.toggleModal}
+              displayLoginPrompt={displayLoginPrompt}
+            />
             <Switch>
               <Route
                 exact

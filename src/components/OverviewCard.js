@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { LoadingSpinnerWrapper } from './utils';
 import { getTradeInfo, getAllCoins } from '../api';
 import { getNestedValues, getChangeColour, formatTradeInfo } from '../helpers';
 
@@ -98,6 +100,7 @@ const OverviewCardWithStyles = withStyles(styles)(OverviewCard);
 export default class OverviewCardContainer extends Component {
   state = {
     coinInfo: {},
+    isLoading: true,
   };
 
   componentDidMount() {
@@ -134,32 +137,43 @@ export default class OverviewCardContainer extends Component {
   }
 
   getCoinInfo = async (currency, symbol) => {
-    const updatedCoinInfo = formatTradeInfo(
-      getNestedValues((await getTradeInfo(symbol, currency)).RAW)
-    );
+    try {
+      const updatedCoinInfo = formatTradeInfo(
+        getNestedValues((await getTradeInfo(symbol, currency)).RAW)
+      );
 
-    if (this.state.coinInfo.name) {
-      // over-writes every property other than name
-      this.setState(({ coinInfo }) => ({
-        coinInfo: {
-          ...coinInfo,
-          ...updatedCoinInfo,
-        },
-      }));
-    } else {
-      // only make extra api call if necessary
-      const { FullName } = (await getAllCoins()).Data[symbol];
-      updatedCoinInfo.NAME = FullName;
-      this.setState({
-        coinInfo: updatedCoinInfo,
+      if (this.state.coinInfo.name) {
+        // over-writes every property other than name
+        this.setState(({ coinInfo }) => ({
+          coinInfo: {
+            ...coinInfo,
+            ...updatedCoinInfo,
+          },
+        }));
+      } else {
+        // only make extra api call if necessary
+        const { FullName } = (await getAllCoins()).Data[symbol];
+        updatedCoinInfo.NAME = FullName;
+        this.setState({
+          coinInfo: updatedCoinInfo,
+          isLoading: false,
+        });
+      }
+    } catch (err) {
+      this.setState(() => {
+        throw err;
       });
     }
   };
 
   render() {
-    const { coinInfo } = this.state;
+    const { coinInfo, isLoading } = this.state;
     const { watchlist, updateWatchList, ...rest } = this.props;
-    return (
+    return isLoading ? (
+      <LoadingSpinnerWrapper height={100} marginBottom={20}>
+        <CircularProgress />
+      </LoadingSpinnerWrapper>
+    ) : (
       <OverviewCardWithStyles
         details={coinInfo}
         watchlist={watchlist}

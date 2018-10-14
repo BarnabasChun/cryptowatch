@@ -1,6 +1,9 @@
 export const toFixedAfterZero = (n, digitsAfterZero = 2) => {
   if (Number.isInteger(n)) return n;
+  if (n === 3e-7) return 0;
+
   const [beforeDecimal, afterDecimal] = n.toString().split('.');
+
   const indexOfFirstNonZero = afterDecimal
     .split('')
     .map(parseFloat)

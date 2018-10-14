@@ -7,6 +7,8 @@ import Nav from './Nav';
 import Watchlist from './Watchlist';
 import Coins from './Coins';
 import LoginModal from './LoginModal';
+import ErrorBoundary from './ErrorBoundary';
+import FourOhFour from './FourOhFour';
 
 export default class App extends Component {
   initialState = {
@@ -112,25 +114,30 @@ export default class App extends Component {
                 exact
                 path="/"
                 render={props => (
-                  <Watchlist
-                    currency={currency}
-                    watchlist={watchlist}
-                    updateWatchList={this.updateWatchList}
-                    {...props}
-                  />
+                  <ErrorBoundary>
+                    <Watchlist
+                      currency={currency}
+                      watchlist={watchlist}
+                      updateWatchList={this.updateWatchList}
+                      {...props}
+                    />
+                  </ErrorBoundary>
                 )}
               />
               <Route
                 path="/coins"
                 render={props => (
-                  <Coins
-                    currency={currency}
-                    updateWatchList={this.updateWatchList}
-                    watchlist={watchlist}
-                    {...props}
-                  />
+                  <ErrorBoundary>
+                    <Coins
+                      currency={currency}
+                      updateWatchList={this.updateWatchList}
+                      watchlist={watchlist}
+                      {...props}
+                    />
+                  </ErrorBoundary>
                 )}
               />
+              <Route component={FourOhFour} />
             </Switch>
           </>
         </Router>

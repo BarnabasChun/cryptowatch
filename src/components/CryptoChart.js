@@ -79,17 +79,23 @@ export default class CryptoChart extends Component {
   }
 
   getHistoricalData = async symbol => {
-    const { currency } = this.props;
-    const { range } = this.state;
-    // the crypcompare api returns a data in UNIX time stamp
-    // and Highcharts is expecting a javascript time which is UNIX time in milliseconds, so the time needs to be multipled by 1000
-    const historicalData = (await getTradeHistory(symbol, currency, range)).Data.map(
-      ({ time, close }) => [time * 1000, close]
-    );
+    try {
+      const { currency } = this.props;
+      const { range } = this.state;
+      // the crypcompare api returns a data in UNIX time stamp
+      // and Highcharts is expecting a javascript time which is UNIX time in milliseconds, so the time needs to be multipled by 1000
+      const historicalData = (await getTradeHistory(symbol, currency, range)).Data.map(
+        ({ time, close }) => [time * 1000, close]
+      );
 
-    this.setState({
-      historicalData,
-    });
+      this.setState({
+        historicalData,
+      });
+    } catch (err) {
+      this.setState(() => {
+        throw err;
+      });
+    }
   };
 
   updateRange = range => {

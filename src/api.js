@@ -6,9 +6,7 @@ const getCryptoCompareData = params =>
     `https://min-api.cryptocompare.com/data/${params}${
       params.includes('?') ? '&' : '?'
     }extraParams=cryptowatch`
-  )
-    .then(res => res.data)
-    .catch(err => console.log(err));
+  ).then(res => res.data);
 
 export const getTradeInfo = (symbols, currency) => {
   const symbolsList = Array.isArray(symbols) ? symbols.join(',') : symbols;

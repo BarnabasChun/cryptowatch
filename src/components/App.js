@@ -41,14 +41,14 @@ export default class App extends Component {
 
     if (isLoggedIn) {
       const userId = firebase.auth().currentUser.uid;
-      const watchlistRef = `watchlist/${userId}`;
+
+      const watchlistTable = firebase
+        .database()
+        .ref(`watchlist/${userId}/${alreadyFollowing ? symbol : ''}`);
+
       if (alreadyFollowing) {
-        firebase
-          .database()
-          .ref(`${watchlistRef}/${symbol}`)
-          .remove();
+        watchlistTable.remove();
       } else {
-        const watchlistTable = firebase.database().ref(watchlistRef);
         watchlistTable.set({
           ...watchlist,
           [symbol]: symbol,

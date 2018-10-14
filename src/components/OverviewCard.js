@@ -7,34 +7,48 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckIcon from '@material-ui/icons/Check';
 import classNames from 'classnames';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import styled from 'styled-components';
 import { LoadingSpinnerWrapper } from './utils';
+
 import { getTradeInfo, getAllCoins } from '../api';
 import { getNestedValues, getChangeColour, formatTradeInfo } from '../helpers';
+
+const StyledOverviewCard = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+  @media only screen and (max-width: 500px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .follow-btn {
+    justify-self: end;
+
+    @media only screen and (max-width: 500px) {
+      justify-self: start;
+    }
+  }
+`;
+
+const PriceInfo = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-gap: 15px;
+`;
 
 const styles = theme => ({
   leftIcon: {
     marginRight: theme.spacing.unit,
   },
-  container: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    alignItems: 'center',
-  },
-  followButton: {
-    justifySelf: 'end',
-  },
-  priceInfo: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, max-content)',
-    gridGap: '1rem',
-  },
 });
 
-const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) => (
+const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList, className }) => (
   <Button
     variant="contained"
     color="secondary"
-    className={classes.followButton}
+    className={className}
     onClick={() => updateWatchList({ symbol: details.FROMSYMBOL, alreadyFollowing })}
   >
     {alreadyFollowing ? (
@@ -46,7 +60,7 @@ const FollowButton = ({ alreadyFollowing, classes, details, updateWatchList }) =
   </Button>
 );
 
-const CoinInfo = ({ classes, details }) => {
+const CoinInfo = ({ details }) => {
   const { NAME, PRICE, CHANGEDAY, CHANGEPCTDAY, LASTUPDATE } = details;
   const changeColour = getChangeColour(CHANGEPCTDAY);
   return (
@@ -54,7 +68,7 @@ const CoinInfo = ({ classes, details }) => {
       <Typography component="h2" variant="title" gutterBottom>
         {NAME}
       </Typography>
-      <div className={classes.priceInfo}>
+      <PriceInfo>
         <Typography component="h2" variant="headline">
           {PRICE}
         </Typography>
@@ -68,7 +82,7 @@ const CoinInfo = ({ classes, details }) => {
           {CHANGEDAY} ({CHANGEPCTDAY}
           %)
         </Typography>
-      </div>
+      </PriceInfo>
       <Typography variant="subheading">
         Last updated: {moment(LASTUPDATE * 1000).fromNow()}
       </Typography>
@@ -81,15 +95,16 @@ const OverviewCard = ({ details, classes, className, updateWatchList, watchlist 
     const alreadyFollowing =
       watchlist && !!Object.keys(watchlist).find(symbol => symbol === details.FROMSYMBOL);
     return (
-      <div className={classNames(classes.container, className)}>
+      <StyledOverviewCard className={classNames(classes.container, className)}>
         <CoinInfo classes={classes} details={details} />
         <FollowButton
+          className="follow-btn"
           updateWatchList={updateWatchList}
           classes={classes}
           alreadyFollowing={alreadyFollowing}
           details={details}
         />
-      </div>
+      </StyledOverviewCard>
     );
   }
   return null;

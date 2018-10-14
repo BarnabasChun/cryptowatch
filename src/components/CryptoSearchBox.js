@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import last from 'lodash/last';
 import { getAllCoins } from '../api';
 import { removeParenthesis } from '../helpers';
+import { ErrorText } from './utils';
 
 const SearchInput = ({ classes, inputProps, placeholder }) => (
   <div className={classes.search}>
@@ -108,14 +109,21 @@ class CryptoSearchBoxContainer extends Component {
   state = {
     coins: [],
     selectedCoin: '',
+    hasError: false,
   };
 
   async componentDidMount() {
-    const coins = Object.values((await getAllCoins()).Data);
+    try {
+      const coins = Object.values((await getAllCoins()).Data);
 
-    this.setState({
-      coins,
-    });
+      this.setState({
+        coins,
+      });
+    } catch {
+      this.setState({
+        hasError: true,
+      });
+    }
   }
 
   handleChange = selectedCoin => {
@@ -132,8 +140,8 @@ class CryptoSearchBoxContainer extends Component {
 
   render() {
     const { placeholder, classes } = this.props;
-    const { coins, selectedCoin } = this.state;
-    if (coins) {
+    const { coins, selectedCoin, hasError } = this.state;
+    if (!hasError) {
       return (
         <CryptoSearchBox
           classes={classes}
@@ -144,7 +152,21 @@ class CryptoSearchBoxContainer extends Component {
         />
       );
     }
-    return null;
+
+    return (
+      <div
+        style={{
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <ErrorText variant="subheading">
+          Sorry this functionality is not available right now. Please try refreshing the page.
+        </ErrorText>
+      </div>
+    );
   }
 }
 

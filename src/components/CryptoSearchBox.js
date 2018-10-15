@@ -10,7 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import last from 'lodash/last';
 import { getAllCoins } from '../api';
 import { removeParenthesis } from '../helpers';
-import { ErrorText } from './utils';
 
 const SearchBackIcon = styled(BackIcon)`
   margin-right: 10px;
@@ -139,7 +138,6 @@ class CryptoSearchBoxContainer extends Component {
   state = {
     coins: [],
     selectedCoin: '',
-    hasError: false,
   };
 
   async componentDidMount() {
@@ -149,9 +147,9 @@ class CryptoSearchBoxContainer extends Component {
       this.setState({
         coins,
       });
-    } catch {
-      this.setState({
-        hasError: true,
+    } catch (err) {
+      this.setState(() => {
+        throw err;
       });
     }
   }
@@ -170,34 +168,17 @@ class CryptoSearchBoxContainer extends Component {
 
   render() {
     const { placeholder, classes, className, toggleFullSearchBox } = this.props;
-    const { coins, selectedCoin, hasError } = this.state;
-    if (!hasError) {
-      return (
-        <CryptoSearchBox
-          className={className}
-          classes={classes}
-          coins={coins}
-          toggleFullSearchBox={toggleFullSearchBox}
-          selectedCoin={selectedCoin}
-          onChange={this.handleChange}
-          placeholder={placeholder}
-        />
-      );
-    }
-
+    const { coins, selectedCoin } = this.state;
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <ErrorText variant="subheading">
-          Sorry this functionality is not available right now. Please try refreshing the page.
-        </ErrorText>
-      </div>
+      <CryptoSearchBox
+        className={className}
+        classes={classes}
+        coins={coins}
+        toggleFullSearchBox={toggleFullSearchBox}
+        selectedCoin={selectedCoin}
+        onChange={this.handleChange}
+        placeholder={placeholder}
+      />
     );
   }
 }

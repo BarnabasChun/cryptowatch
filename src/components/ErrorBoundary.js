@@ -18,9 +18,10 @@ export default class ErrorBoundary extends Component {
       return (
         <div>
           <ErrorWrapper>
-            <ErrorText variant="display2">Oh no, something went wrong!</ErrorText>
+            <ErrorText variant="display2">Error</ErrorText>
             <ErrorText variant="subheading">
-              There was a problem retrieving the data you requested :(
+              Oh no, something went wrong! There was a problem retrieving the data you requested.
+              Please try again later.
             </ErrorText>
           </ErrorWrapper>
         </div>

@@ -95,52 +95,50 @@ export default class App extends Component {
     return (
       <div>
         <GlobalStyle />
-        <Router>
-          <>
-            <Nav
-              isLoggedIn={isLoggedIn}
-              currency={currency}
-              onChange={this.handleChange}
-              openModal={this.toggleModal}
-              logout={this.logout}
-            />
-            <LoginModal
-              isOpen={loginModalIsOpen}
-              toggleModal={this.toggleModal}
-              displayLoginPrompt={displayLoginPrompt}
-            />
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={props => (
-                  <ErrorBoundary>
+        <ErrorBoundary>
+          <Router>
+            <>
+              <Nav
+                isLoggedIn={isLoggedIn}
+                currency={currency}
+                onChange={this.handleChange}
+                openModal={this.toggleModal}
+                logout={this.logout}
+              />
+              <LoginModal
+                isOpen={loginModalIsOpen}
+                toggleModal={this.toggleModal}
+                displayLoginPrompt={displayLoginPrompt}
+              />
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={props => (
                     <Watchlist
                       currency={currency}
                       watchlist={watchlist}
                       updateWatchList={this.updateWatchList}
                       {...props}
                     />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path="/coins"
-                render={props => (
-                  <ErrorBoundary>
+                  )}
+                />
+                <Route
+                  path="/coins"
+                  render={props => (
                     <Coins
                       currency={currency}
                       updateWatchList={this.updateWatchList}
                       watchlist={watchlist}
                       {...props}
                     />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route component={FourOhFour} />
-            </Switch>
-          </>
-        </Router>
+                  )}
+                />
+                <Route component={FourOhFour} />
+              </Switch>
+            </>
+          </Router>
+        </ErrorBoundary>
       </div>
     );
   }

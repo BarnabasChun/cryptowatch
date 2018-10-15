@@ -9,8 +9,8 @@ const LogoLink = styled(Link)`
   text-decoration: none;
 `;
 
-const Logo = () => (
-  <LogoLink to="/">
+const Logo = ({ className }) => (
+  <LogoLink to="/" className={className}>
     <Typography variant="headline" color="inherit">
       Cryptowatch
     </Typography>

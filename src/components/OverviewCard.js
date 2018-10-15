@@ -9,7 +9,6 @@ import classNames from 'classnames';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import styled from 'styled-components';
 import { LoadingSpinnerWrapper } from './utils';
-
 import { getTradeInfo, getAllCoins } from '../api';
 import { getNestedValues, getChangeColour, formatTradeInfo } from '../helpers';
 

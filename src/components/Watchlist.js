@@ -152,19 +152,13 @@ export default class Watchlist extends Component {
     sortDirection: 'asc',
     page: 0,
     rowsPerPage: 5,
-    isLoading: true,
   };
 
   state = this.initialState;
 
   componentDidMount() {
     const { watchlist, currency } = this.props;
-    if (watchlist === null) {
-      this.setState({
-        isLoading: false,
-      });
-      return;
-    }
+    if (watchlist === null) return;
 
     this.getCoinInfo(currency, watchlist);
   }
@@ -196,7 +190,6 @@ export default class Watchlist extends Component {
       this.setState({
         formattedData,
         rawData,
-        isLoading: false,
       });
     } catch (err) {
       this.setState(() => {
@@ -232,16 +225,14 @@ export default class Watchlist extends Component {
 
   render() {
     const { updateWatchList, ...props } = this.props;
-    const { formattedData, columnToSort, sortDirection, rowsPerPage, page, isLoading } = this.state;
+    const { formattedData, columnToSort, sortDirection, rowsPerPage, page } = this.state;
     return (
       <StyledWatchList>
         <Wrapper>
           <Typography variant="headline" style={{ marginBottom: '20px' }}>
             Your Watchlist
           </Typography>
-          {isLoading ? (
-            <Typography variant="body2">Loading...</Typography>
-          ) : formattedData.length ? (
+          {formattedData.length ? (
             <StyledDataTable
               handleSort={this.handleSort}
               updateWatchList={updateWatchList}
